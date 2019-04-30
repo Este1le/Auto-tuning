@@ -78,7 +78,7 @@ def extract_eval_decode(model_path):
 
     return eval_dict
 
-def get_domain(model_path):
+def get_domain(model_name):
     '''
     Get the domain (hyperparameter settings) of a model.
     :param model_path: The path to the model directory.
@@ -86,7 +86,7 @@ def get_domain(model_path):
     '''
     domain_dict = {}
 
-    lst = model_path[6:].split("-")
+    lst = model_name[6:].split("-")
     domain_dict["architecture"] = lst[0]
 
     lst = lst[1:]
@@ -114,6 +114,9 @@ def get_all_domain_eval(models_dir):
     for model_name in os.listdir(models_dir):
         model_path = os.path.join(models_dir, model_name)
         if check_converge(model_path):
-            res.append((get_domain(model_path), extract_eval_log(model_path).update(extract_eval_decode(model_path))))
+            domain_dict = get_domain(model_name)
+            eval_dict = extract_eval_log(model_path)
+            eval_dict.update(extract_eval_decode(model_path))
+            res.append((domain_dict, eval_dict))
 
     return res
