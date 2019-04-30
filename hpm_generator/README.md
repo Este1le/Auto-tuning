@@ -9,6 +9,7 @@ Scripts for automatically generating hpm files for Neural Machine Translation mo
 3. Make a directory for generated hpm files, e.g. `rnn_hpm`.
 
 4. Run scripts to generate hpm files:
+
 RNN models:
 ```bash
 python hpm_generator.py -a rnn -o rnn_hpm
