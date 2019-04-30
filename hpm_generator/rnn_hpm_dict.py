@@ -9,7 +9,7 @@ hpm_dict['bpe_symbols'] = [10000, 30000, 50000]
 
 # Model architecture
 hpm_dict['num_embed'] = ["\"256:256\"", "\"512:512\"", "\"1024:1024\""]
-hpm_dict['num_layers'] = ["\"2:2\"", "\"4:4\"", "\"6:6\""] 
+hpm_dict['num_layers'] = ["\"1:1\"", "\"2:2\"", "\"4:4\""] 
 
 # Training configuration
 hpm_dict['batch_size'] = [2048, 4096]

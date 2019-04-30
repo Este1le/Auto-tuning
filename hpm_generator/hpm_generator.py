@@ -8,21 +8,6 @@ import rnn_hpm_dict
 import cnn_hpm_dict
 import trans_hpm_dict
 
-parser = argparse.ArgumentParser(description='Generate hyperparameter files for Neural Machine Translaion models.')
-
-parser.add_argument('--architecture', '-a', choices=['rnn', 'cnn', 'trans'],
-                    help='Architecture of the NMT model: RNN, CNN or Transformer.')
-parser.add_argument('--output', '-o', default='./', help='The output directory.')
-
-args = parser.parse_args()
-arch = args.architecture
-outd = args.output
-
-symbol = "???" # symbol for unknown hyperparameter values in the hpm template files 
-
-hpm_dict = eval("{0}_hpm_dict".format(arch)).hpm_dict
-hpm_tmp = "{0}.hpm.template".format(arch)
-
 def get_combs(hpm_dict):
     '''
     get all the combinations of hyperparameter settings.
@@ -80,12 +65,28 @@ def write_hpm(hpm_tmp, hpm_combs, outd):
         with open(os.path.join(outd, dict2str(h_dict)+".hpm"), "w") as f:
             f.write("".join(newlines))
 
-hpm_combs = get_combs(hpm_dict)
-print("Numbers of {0} models to generate: {1}.".format(arch, len(hpm_combs)))
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate hyperparameter files for Neural Machine Translaion models.')
 
-print("Writing to files...")
-write_hpm(hpm_tmp, hpm_combs, outd)
-print("Done")
+    parser.add_argument('--architecture', '-a', choices=['rnn', 'cnn', 'trans'],
+                        help='Architecture of the NMT model: RNN, CNN or Transformer.')
+    parser.add_argument('--output', '-o', default='./', help='The output directory.')
+
+    args = parser.parse_args()
+    arch = args.architecture
+    outd = args.output
+
+    symbol = "???" # symbol for unknown hyperparameter values in the hpm template files
+
+    hpm_dict = eval("{0}_hpm_dict".format(arch)).hpm_dict
+    hpm_tmp = "{0}.hpm.template".format(arch)
+
+    hpm_combs = get_combs(hpm_dict)
+    print("Numbers of {0} models to generate: {1}.".format(arch, len(hpm_combs)))
+
+    print("Writing to files...")
+    write_hpm(hpm_tmp, hpm_combs, outd)
+    print("Done")
 
 
 
