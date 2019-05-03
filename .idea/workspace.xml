@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15627683-26c1-4a34-8375-e6fab085cb71" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/bayesian_optimization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rescale.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bayesian_optimization.py" beforeDir="false" afterPath="$PROJECT_DIR$/bayesian_optimization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/preprocess.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,19 +37,19 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="1" />
-          <entry key="py" value="9718" />
+          <entry key="py" value="9984" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="9718" />
+          <entry key="Python" value="9984" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6761453">
+    <splitter split-orientation="horizontal" split-proportion="0.40547657">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
@@ -72,11 +69,11 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/bayesian_optimization.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="437">
-                  <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+                <state relative-caret-position="692">
+                  <caret line="65" column="21" lean-forward="true" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
                   <folding>
                     <element signature="e#1#16#0" expanded="true" />
-                    <marker date="1556896969237" expanded="true" signature="2104:2518" ph="..." />
+                    <marker date="1556900142385" expanded="true" signature="2206:2640" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -103,11 +100,11 @@
       </split-first>
       <split-second>
         <leaf>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/preprocess.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="173">
-                  <caret line="47" column="19" lean-forward="true" selection-start-line="47" selection-start-column="19" selection-end-line="47" selection-end-column="19" />
+                <state relative-caret-position="444">
+                  <caret line="89" column="48" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
@@ -115,10 +112,10 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/rescale.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="266">
+                <state relative-caret-position="74">
                   <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
                   <folding>
                     <marker date="1556895342693" expanded="true" signature="1717:1722" ph="..." />
@@ -137,6 +134,11 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>cos</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -286,19 +288,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="47" column="19" lean-forward="true" selection-start-line="47" selection-start-column="19" selection-end-line="47" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rescale.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
+        <state relative-caret-position="74">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
           <folding>
             <marker date="1556895342693" expanded="true" signature="1717:1722" ph="..." />
@@ -306,13 +298,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="89" column="48" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bayesian_optimization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="692">
+          <caret line="65" column="21" lean-forward="true" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
           <folding>
             <element signature="e#1#16#0" expanded="true" />
-            <marker date="1556896969237" expanded="true" signature="2104:2518" ph="..." />
+            <marker date="1556900142385" expanded="true" signature="2206:2640" ph="..." />
           </folding>
         </state>
       </provider>

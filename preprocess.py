@@ -87,7 +87,7 @@ def get_domain(model_name):
     domain_dict = {}
 
     lst = model_name[6:].split("-")
-    domain_dict["architecture"] = lst[0]
+    domain_dict["architecture"] = lst[0].lower()
 
     lst = lst[1:]
     for i in range(0, len(lst), 2):

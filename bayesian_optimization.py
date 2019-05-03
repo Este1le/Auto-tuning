@@ -1,15 +1,17 @@
 import argparse
 import logging
 import numpy as np
-import sklearn
+from sklearn import metrics
 from robo.fmin import bayesian_optimization
 import preprocess
 import rescale
 
+logging.basicConfig(level=logging.INFO)
+
 parser = argparse.ArgumentParser(description='Bayesian optimization.')
 parser.add_argument('--modeldir', '-d', default='/export/a10/kduh/p/mt/gridsearch/ted-zh-en/models/',
                     help='The directory to all the models.')
-parser.add_argument('--architecture', '-a', choices=['rnn', 'cnn', 'trans'],
+parser.add_argument('--architecture', '-a', required=True, choices=['rnn', 'cnn', 'trans'],
                     help='The architecture of the models to be tuned.')
 parser.add_argument('--rnn-cell-type', '-c', required=False, choices=['lstm', 'gru'])
 
@@ -22,11 +24,11 @@ if arch=='rnn' and 'rnn_cell_type' not in vars(args):
 
 rnn_cell_type = args.rnn_cell_type
 
-# Get domains and evaluation results for all models
+logging.info("Extracting domains and evaluation results for all models")
 domain_eval_lst = preprocess.get_all_domain_eval(models_dir)
 domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==arch) and (de[0]['rnn_cell_type']==rnn_cell_type)]
 
-domain_dict_lst, eval_dict_lst = list(zip(*domain_eval_lst_arch)[0]), list(zip(*domain_eval_lst_arch)[1])
+domain_dict_lst, eval_dict_lst = list(list(zip(*domain_eval_lst_arch))[0]), list(list(zip(*domain_eval_lst_arch))[1])
 
 # Rescale values to the range [0,1] and turn dictionary into list
 if arch=='rnn':
@@ -50,7 +52,7 @@ def objective_function(x):
     for i in range(len(rescaled_domain_lst)):
         x_ = rescaled_domain_lst[i]
         # Choose a domain that is most similar (measured by cosine similarity) to the sampled vector
-        cos_sim = sklearn.metrics.pairwise.cosine_similarity(x, x_)
+        cos_sim = abs(metrics.pairwise.cosine_similarity(np.array(x).reshape(1,-1), np.array(x_).reshape(1,-1))[0][0])
         if cos_sim > max:
             max = cos_sim
             max_id = i
@@ -59,8 +61,8 @@ def objective_function(x):
 lower = np.array([0]*len(rescaled_domain_lst[0]))
 upper = np.array([1]*len(rescaled_domain_lst[0]))
 
-logging.basicConfig(level=logging.INFO)
-results = bayesian_optimization(objective_function, lower,upper, num_iteration=20)
-print(results)
+
+results = bayesian_optimization(objective_function, lower,upper, num_iterations=20)
+logging.info(results)
 
 
