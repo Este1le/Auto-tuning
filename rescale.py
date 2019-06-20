@@ -1,6 +1,6 @@
 import math
 
-base_rescale_dict = {'bpe_symbols': lambda x: (x-1000)/4000, # 10000, 30000, 50000
+base_rescale_dict = {'bpe_symbols': lambda x: (x-10000)/40000, # 10000, 30000, 50000
                      'initial_learning_rate': lambda x: (x-0.0003)/0.0007, # 0.0003, 0.0006, 0.001
                      'num_embed': lambda x: (math.log(x,2)-8)/2 # 256, 512, 1024
 }
@@ -31,7 +31,7 @@ trans_rescale_dict = {'num_layers': lambda x: (x-2)/2, # 2, 4
                       # 'batch_size' 4096
 }
 
-trans_rescale_dict.update(trans_rescale_dict)
+trans_rescale_dict.update(base_rescale_dict)
 trans_hyps = trans_rescale_dict.keys()
 
 def rescale(domain_dict_list, rescale_dict):

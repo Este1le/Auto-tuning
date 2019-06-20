@@ -40,6 +40,7 @@ elif arch=='trans':
 
 # The objective we want to optimize
 eval_lst = [e['dev_ppl'] for e in eval_dict_lst]
+BEST = min(eval_lst)
 
 def objective_function(x):
     '''
@@ -47,22 +48,26 @@ def objective_function(x):
     :param x: domain sampled from bayesian optimization
     :return: the corresponding evaluation result
     '''
-    max = 0
-    max_id = 0
+    # max = 0
+    # max_id = 0
+    # for i in range(len(rescaled_domain_lst)):
+    #     x_ = rescaled_domain_lst[i]
+    #     # Choose a domain that is most similar (measured by cosine similarity) to the sampled vector
+    #     cos_sim = abs(metrics.pairwise.cosine_similarity(np.array(x).reshape(1,-1), np.array(x_).reshape(1,-1))[0][0])
+    #     if cos_sim > max:
+    #         max = cos_sim
+    #         max_id = i
+    # return eval_lst[max_id]
     for i in range(len(rescaled_domain_lst)):
-        x_ = rescaled_domain_lst[i]
-        # Choose a domain that is most similar (measured by cosine similarity) to the sampled vector
-        cos_sim = abs(metrics.pairwise.cosine_similarity(np.array(x).reshape(1,-1), np.array(x_).reshape(1,-1))[0][0])
-        if cos_sim > max:
-            max = cos_sim
-            max_id = i
-    return eval_lst[max_id]
+        if x == rescaled_domain_lst[i]:
+            return eval_lst[x]
 
 lower = np.array([0]*len(rescaled_domain_lst[0]))
 upper = np.array([1]*len(rescaled_domain_lst[0]))
 
 
-results = bayesian_optimization(objective_function, lower,upper, num_iterations=20)
+results = bayesian_optimization(objective_function, lower,upper, num_iterations=30,
+                                sampling_method="exact", pool=np.array(rescaled_domain_lst), best=BEST)
 logging.info(results)
 
 
