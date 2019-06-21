@@ -60,7 +60,7 @@ def objective_function(x):
     #         max_id = i
     # return eval_lst[max_id]
     for i in range(len(rescaled_domain_lst)):
-        if x == rescaled_domain_lst[i]:
+        if (x == rescaled_domain_lst[i]).all():
             return eval_lst[x]
 
 lower = np.array([0]*len(rescaled_domain_lst[0]))
