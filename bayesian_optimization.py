@@ -115,14 +115,14 @@ with open("/export/a08/xzhan138/Auto-tuning/bo_" + kernel + "_" + sampling_metho
     f.write("Best ind\n")
     f.write(str(best_ind) + "\n")
     f.write("Ave: " + str(sum(best_ind)/len(best_ind)) + "\n")
-    f.write("Var: " + str(np.std(best_ind)) + "\n\n")
+    f.write("Std: " + str(np.std(best_ind)) + "\n\n")
 
     f.write("Fix budget(10)\n")
     f.write(str(fix_budget) + "\n")
     f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
-    f.write("Var: " + str(np.std(fix_budget)) + "\n\n")
+    f.write("Std: " + str(np.std(fix_budget)) + "\n\n")
 
     f.write("Close best(1) \n")
     f.write(str(close_best) + "\n")
     f.write("Ave: " + str(sum(close_best)/len(close_best)) + "\n")
-    f.write("Var: " + str(np.std(close_best)))
+    f.write("Std: " + str(np.std(close_best)))
