@@ -24,6 +24,7 @@ def check_converge(model_path):
             return True
     return False
 
+
 def isfloat(value):
     '''
     Check whether a string can be converted to float.
@@ -44,6 +45,7 @@ def extract_eval_log(model_path):
     lines = readfile(log_path)
 
     eval_dict = {}
+    eval_dict["train_ppl"] = sys.float_info.max
 
     for l in lines:
 
@@ -60,6 +62,8 @@ def extract_eval_log(model_path):
         # dev perplexity
         elif "Best validation perplexity:" in l:
             eval_dict["dev_ppl"] = float(l.strip().split(":")[-1])
+        elif "Train-perplexity=" in l:
+            eval_dict["train_ppl"] = min(eval_dict["train_ppl"], float(l.strip().split("=")[-1]))
 
     return eval_dict
 
@@ -71,6 +75,7 @@ def extract_eval_decode(model_path):
     :return: A dictionary of evaluation results.
     '''
     eval_dict = {}
+
     # dev BLEU
     # test BLEU
     # test perplexity

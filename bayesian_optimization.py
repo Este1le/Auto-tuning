@@ -40,7 +40,8 @@ elif arch=='trans':
 
 # The objective we want to optimize
 eval_lst = [e['dev_ppl'] for e in eval_dict_lst]
-BEST = min(eval_lst)
+origin_rdl = rescaled_domain_lst[:]
+origin_el = eval_lst[:]
 
 def objective_function(x):
     '''
@@ -65,9 +66,62 @@ def objective_function(x):
 lower = np.array([0]*len(rescaled_domain_lst[0]))
 upper = np.array([1]*len(rescaled_domain_lst[0]))
 
+results = []
+best_ind = []
+fix_budget = []
+close_best = []
 
-results = bayesian_optimization(objective_function, lower,upper, num_iterations=30,
-                                sampling_method="exact", pool=np.array(rescaled_domain_lst), best=BEST)
-logging.info(results)
+BG = 10
+DIF = 1
+num_run = 10
+
+BEST = min(eval_lst) # max for BLEU
+WORST = 100000 # 0 for BLEU
+kernel = "matern52"
+sampling_method = "exact"
+replacement = False
+
+for _ in range(num_run):
+    rescaled_domain_lst = origin_rdl[:]
+    eval_lst = origin_el[:]
+    logging.info("#" + str(_) + " run of bayesian optimization.")
+    result = bayesian_optimization(objective_function, lower,upper, acquisition_function="log_ei", model_type="gp", 
+                                   num_iterations=len(origin_rdl), kernel=kernel, sampling_method=sampling_method, 
+                                   replacement=replacement, pool=np.array(rescaled_domain_lst), best=BEST)
+    results.append(result)
+    invs = result["incumbent_values"]
+
+    if BEST in invs:
+        best_ind.append(invs.index(BEST)+1)
+    else:
+        best_ind.append(WORST)
+
+    fix_budget.append(abs(min(invs[:BG])-BEST))
+
+    for i in range(len(invs)):
+        if invs[i]-BEST <= DIF:
+            close_best.append(i+1)
+            break
+
+if replacement:
+    rep = "rep"
+else:
+    rep = "norep"
+
+with open("/export/a08/xzhan138/Auto-tuning/bo_" + kernel + "_" + sampling_method + "_" + rep + ".res", "w") as f:
+    f.write(str(results))
+    f.write("\n")
+    f.write("########################################")
+    f.write("Best ind\n")
+    f.write(str(best_ind) + "\n")
+    f.write("Ave: " + str(sum(best_ind)/len(best_ind)) + "\n")
+    f.write("Fix budget(20)\n")
+    f.write(str(fix_budget) + "\n")
+    f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
+    f.write("Close best(1) \n")
+    f.write(str(close_best) + "\n")
+    f.write("Ave: " + str(sum(close_best)/len(close_best)))
+
+
 
 
