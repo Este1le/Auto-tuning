@@ -61,7 +61,7 @@ def objective_function(x):
     # return eval_lst[max_id]
     for i in range(len(rescaled_domain_lst)):
         if (x == rescaled_domain_lst[i]).all():
-            return eval_lst[x]
+            return eval_lst[i]
 
 lower = np.array([0]*len(rescaled_domain_lst[0]))
 upper = np.array([1]*len(rescaled_domain_lst[0]))
@@ -85,7 +85,7 @@ for _ in range(num_run):
     rescaled_domain_lst = origin_rdl[:]
     eval_lst = origin_el[:]
     logging.info("#" + str(_) + " run of bayesian optimization.")
-    result = bayesian_optimization(objective_function, lower,upper, acquisition_function="log_ei", model_type="gp", 
+    result = bayesian_optimization(objective_function, lower,upper, acquisition_func="log_ei", model_type="gp", 
                                    num_iterations=len(origin_rdl), kernel=kernel, sampling_method=sampling_method, 
                                    replacement=replacement, pool=np.array(rescaled_domain_lst), best=BEST)
     results.append(result)
@@ -111,17 +111,18 @@ else:
 with open("/export/a08/xzhan138/Auto-tuning/bo_" + kernel + "_" + sampling_method + "_" + rep + ".res", "w") as f:
     f.write(str(results))
     f.write("\n")
-    f.write("########################################")
+    f.write("########################################\n\n")
     f.write("Best ind\n")
     f.write(str(best_ind) + "\n")
     f.write("Ave: " + str(sum(best_ind)/len(best_ind)) + "\n")
+    f.write("Var: " + str(np.var(best_ind)) + "\n\n")
+
     f.write("Fix budget(20)\n")
     f.write(str(fix_budget) + "\n")
     f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
+    f.write("Var: " + str(np.var(fix_budget)) + "\n\n")
+
     f.write("Close best(1) \n")
     f.write(str(close_best) + "\n")
-    f.write("Ave: " + str(sum(close_best)/len(close_best)))
-
-
-
-
+    f.write("Ave: " + str(sum(close_best)/len(close_best)) + "\n")
+    f.write("Var: " + str(np.var(close_best)))
