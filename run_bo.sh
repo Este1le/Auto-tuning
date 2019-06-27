@@ -6,11 +6,11 @@ python ${workdir}/bayesian_optimization.py --modeldir ${modeldir} \
 								           --metric ${metric} \
 										   --best ${best} \
 										   --sampling-method ${sampling_method} \
-										   --replacement ${replacement} \
 										   --acquisition-func ${acquisition_func} \
 										   --model-type ${model_type} \
 										   --num-run ${num_run} \
 										   --kernel ${kernel} \
 										   --budget ${budget} \
 										   --dif ${dif} \
-										   --output ${output}
+										   --output ${output} \
+										   ${replacement} 

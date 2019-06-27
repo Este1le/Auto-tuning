@@ -32,7 +32,7 @@ def get_args():
                         arg) to the one returned from maximizing acquisition function.\
                         exact: evaluate all samples in the candidate pool on acquisition function\
                         and choose the one with maximum output.')
-    parser.add_argument('--replacement', required=True, choices=[True, False],
+    parser.add_argument('--replacement', action='store_true',
                         help='Whether to sample from pool with replacement.')
     parser.add_argument('--acquisition-func', required=True, choices=["ei", "log_ei", "lcb", "pi"],
                         help="The acquisition function.")
@@ -51,7 +51,7 @@ def get_args():
                         help='This is for the use of measuring the performance of BO given limited budget.\
                         Or the number of models we are allowed to evaluate. \
                         Or the number of iterations of BO we are allowed to run.')
-    parser.add_argument('--dif', type=int, default=1,
+    parser.add_argument('--dif', type=float, default=1,
                         help='This is for the use of checking how many iterations should BO take to\
                         to achieve a result whose difference to the best result is no larger than dif.')
 
@@ -60,31 +60,31 @@ def get_args():
 
     args = parser.parse_args()
 
-    if arch=='rnn' and 'rnn_cell_type' not in vars(args):
+    if args.architecture=='rnn' and 'rnn_cell_type' not in vars(args):
         parser.error('--rnn-cell-type is required if the architecture is rnn.')
 
     return args
 
 def extract_data(args):
     logging.info("Extracting domains and evaluation results for all models")
-    domain_eval_lst = preprocess.get_all_domain_eval(args.model_dir)
-    if arch == 'rnn':
-        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.arch) and (de[0]['rnn_cell_type']==args.rnn_cell_type)]
+    domain_eval_lst = preprocess.get_all_domain_eval(args.modeldir)
+    if args.architecture == 'rnn':
+        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.architecture) and (de[0]['rnn_cell_type']==args.rnn_cell_type)]
     else:
-        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.arch)]
+        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.architecture)]
 
     domain_dict_lst, eval_dict_lst = list(list(zip(*domain_eval_lst_arch))[0]), list(list(zip(*domain_eval_lst_arch))[1])
 
     # Rescale values to the range [0,1] and turn dictionary into list
-    if arch=='rnn':
+    if args.architecture=='rnn':
         rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.rnn_rescale_dict)
-    elif arch=='cnn':
+    elif args.architecture=='cnn':
         rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.cnn_rescale_dict)
-    elif arch=='trans':
+    elif args.architecture=='trans':
         rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
 
     # The objective we want to optimize
-    if args.best_func == 'min':
+    if args.best == 'min':
         eval_lst = [e[args.metric] for e in eval_dict_lst]
         WORST = 100000
     else:
@@ -108,24 +108,14 @@ def write_results(args, results, best_ind, fix_budget, close_best):
         f.write("Close best({0})\n".format(args.dif))
         f.write(str(close_best) + "\n")
         f.write("Ave: " + str(sum(close_best)/len(close_best)) + "\n")
-        f.write("Std: " + str(np.std(close_best)))
+        f.write("Std: " + str(np.std(close_best)) + "\n\n")
 
         f.write("Fix budget({0})\n".format(args.budget))
         f.write(str(fix_budget) + "\n")
         f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
         f.write("Std: " + str(np.std(fix_budget)) + "\n\n")
 
-def objective_function(x):
-    '''
-    Map a sampled domain to evaluation results returned from the model
-    :param x: domain sampled from bayesian optimization
-    :return: the corresponding evaluation result
-    '''
-    for i in range(len(rescaled_domain_lst)):
-        if (x == rescaled_domain_lst[i]).all():
-            return eval_lst[i]
-
-def bayesian_optimization(args, rescaled_domain_lst, eval_lst, BEST, WORST):
+def run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST):
     origin_rdl = rescaled_domain_lst[:]
     origin_el = eval_lst[:]
 
@@ -165,7 +155,18 @@ def bayesian_optimization(args, rescaled_domain_lst, eval_lst, BEST, WORST):
 def main():
     args = get_args()
     rescaled_domain_lst, eval_lst, BEST, WORST = extract_data(args)
-    results, best_ind, fix_budget, close_best = bayesian_optimization(args, rescaled_domain_lst, eval_lst, BEST, WORST)
+
+    def objective_function(x):
+    '''
+    Map a sampled domain to evaluation results returned from the model
+    :param x: domain sampled from bayesian optimization
+    :return: the corresponding evaluation result
+    '''
+    for i in range(len(rescaled_domain_lst)):
+        if (x == rescaled_domain_lst[i]).all():
+            return eval_lst[i]
+
+    results, best_ind, fix_budget, close_best = run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST)
     write_results(args, results, best_ind, fix_budget, close_best)
     
 
