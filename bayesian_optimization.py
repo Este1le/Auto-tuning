@@ -5,6 +5,7 @@ from sklearn import metrics
 from robo.fmin import bayesian_optimization
 import preprocess
 import rescale
+import get_kernel
 
 logging.basicConfig(level=logging.INFO)
 
@@ -77,11 +78,11 @@ def extract_data(args):
 
     # Rescale values to the range [0,1] and turn dictionary into list
     if args.architecture=='rnn':
-        rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.rnn_rescale_dict)
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.rnn_rescale_dict)
     elif args.architecture=='cnn':
-        rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.cnn_rescale_dict)
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.cnn_rescale_dict)
     elif args.architecture=='trans':
-        rescaled_domain_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
 
     # The objective we want to optimize
     if args.best == 'min':
@@ -92,7 +93,7 @@ def extract_data(args):
         WORST = 0
     BEST = min(eval_lst)
 
-    return rescaled_domain_lst, eval_lst, BEST, WORST
+    return rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST
 
 def write_results(args, results, best_ind, fix_budget, close_best):
 
@@ -115,7 +116,7 @@ def write_results(args, results, best_ind, fix_budget, close_best):
         f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
         f.write("Std: " + str(np.std(fix_budget)) + "\n\n")
 
-def run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST):
+def run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST):
     origin_rdl = rescaled_domain_lst[:]
     origin_el = eval_lst[:]
 
@@ -132,7 +133,7 @@ def run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eva
         eval_lst = origin_el[:]
         logging.info("#" + str(_) + " run of bayesian optimization.")
         result = bayesian_optimization(objective_function, lower,upper, acquisition_func=args.acquisition_func, 
-                                       model_type=args.model_type, num_iterations=len(origin_rdl), kernel=args.kernel, 
+                                       model_type=args.model_type, num_iterations=len(origin_rdl), kernel=kernel, 
                                        sampling_method=args.sampling_method, replacement=args.replacement, 
                                        pool=np.array(rescaled_domain_lst), best=BEST)
         results.append(result)
@@ -154,7 +155,8 @@ def run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eva
 
 def main():
     args = get_args()
-    rescaled_domain_lst, eval_lst, BEST, WORST = extract_data(args)
+    rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
+    kernel = get_kernel(args.architecture, rescaled_domain_lst, domain_name_lst)
 
     def objective_function(x):
     '''
@@ -166,7 +168,7 @@ def main():
         if (x == rescaled_domain_lst[i]).all():
             return eval_lst[i]
 
-    results, best_ind, fix_budget, close_best = run_bayesian_optimization(args, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST)
+    results, best_ind, fix_budget, close_best = run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST)
     write_results(args, results, best_ind, fix_budget, close_best)
     
 

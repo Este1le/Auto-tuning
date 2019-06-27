@@ -46,6 +46,6 @@ def rescale(domain_dict_list, rescale_dict):
         for d in rescale_dict.keys():
             mres.append(rescale_dict[d](m[d]))
         res.append(mres)
-    return res
+    return res, rescale_dict.keys()
 
 
