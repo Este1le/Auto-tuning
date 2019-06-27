@@ -18,10 +18,13 @@ def check_converge(model_path):
     :param model_path: The path to the model directory.
     :return: True or False
     '''
-    log_path = os.path.join(model_path, "log")
+    log_path = os.path.join(model_path, "valid.1best.log")
     if os.path.isfile(log_path):
-        if "Best" in open(log_path).read():
-            return True
+        with open(log_path) as f:
+            for l in f.readlines():
+                if "Uncaught exception" in l:
+                    return False
+        return True
     return False
 
 
@@ -54,11 +57,11 @@ def extract_eval_log(model_path):
             eval_dict["num_param"] = int(l.strip().split(":")[-1])
         # used cpu time for decoding dev set
         elif "Time-cost" in l:
-            eval_dict["dev_cpu_time"] = float(l.strip().split()[-2].split("=")[-1])
+            #eval_dict["dev_cpu_time"] = float(l.strip().split()[-2].split("=")[-1])
             eval_dict["num_updates"] = int(l.strip().split()[-5].split("=")[-1])
         # gpu memory used for training
         elif "log_gpu_memory_usage" in l:
-            eval_dict["gpu_memory"] = int(l.strip().split(":")[-1].split("/")[0])
+            eval_dict["gpu_memory"] = int(l.strip().split("]")[-1].split(":")[1].split("/")[0])
         # dev perplexity
         elif "Best validation perplexity:" in l:
             eval_dict["dev_ppl"] = float(l.strip().split(":")[-1])
@@ -75,11 +78,19 @@ def extract_eval_decode(model_path):
     :return: A dictionary of evaluation results.
     '''
     eval_dict = {}
-
+    tb_path = os.path.join(model_path, "test1.1best.bleu")
+    tb_log_path = os.path.join(model_path, "test1.1best.log")
+    vb_path = os.path.join(model_path, "valid.1best.bleu")
+    vb_log_path = os.path.join(model_path, "valid.1best.log")
     # dev BLEU
+    eval_dict["dev_bleu"] = float(readfile(vb_path)[0].strip().split()[2][:-1])
+    # dev GPU time
+    eval_dict["dev_gpu_time"] = float(readfile(vb_log_path)[-3].strip().split(',')[0].split()[-1])
     # test BLEU
+    eval_dict["test_bleu"] = float(readfile(tb_path)[0].strip().split()[2][:-1])
+    # test cpu time
+    #eval_dict["test_cpu_time"] = float(readfile(tb_log_path)[-3].strip().split()[6][:-1])
     # test perplexity
-    # used gpu time for decoding test set
 
     return eval_dict
 

@@ -1,13 +1,13 @@
 import math
 
-base_rescale_dict = {'bpe_symbols': lambda x: (x-10000)/40000, # 10000, 30000, 50000 -> 0, 0.5, 1
-                     'initial_learning_rate': lambda x: (x-0.0003)/0.0007, # 0.0003, 0.0006, 0.001 -> 0, 0.0003/0.0007, 1
-                     'num_embed': lambda x: (math.log(x,2)-8)/2 # 256, 512, 1024 -> 0, 0.5, 1
+base_rescale_dict = {'initial_learning_rate': lambda x: (x-0.0003)/0.0007, # 0.0003, 0.0006, 0.001
+                     'num_embed': lambda x: (math.log(x,2)-8)/2 # 256, 512, 1024
 }
 
 rnn_rescale_dict = {'num_layers': lambda x: math.log(x,2)/2, # 1, 2, 4
-                    'rnn_num_hidden': lambda x: (math.log(x,2)-8)/2, # 256, 512, 1024 -> 0, 0.5, 1
-                    'batch_size': lambda x: (x-2048)/2048 # 2048, 4096 -> 0, 1
+                    'rnn_num_hidden': lambda x: (math.log(x,2)-8)/2, # 256, 512, 1024
+                    'batch_size': lambda x: (x-2048)/2048, # 2048, 4096
+                    'rnn_cell_type': lambda x: 1 if x=="gru" else 0
 
 }
 
@@ -25,9 +25,9 @@ cnn_rescale_dict.update(base_rescale_dict)
 cnn_hyps = cnn_rescale_dict.keys()
 
 trans_rescale_dict = {'num_layers': lambda x: (x-2)/2, # 2, 4
-                      'transformer_attention_heads': lambda x: (x-8)/8, # 8, 16 -> 0, 1
-                      'transformer_feed_forward_num_hidden': lambda x: (x-1024)/1024, # 1024, 2048 -> 0, 1
-                      'transformer_model_size': lambda x: (math.log(x,2)-8)/2 # 256, 512, 1024 -> 0, 0.5, 1
+                      'transformer_attention_heads': lambda x: (x-8)/8, # 8, 16
+                      'transformer_feed_forward_num_hidden': lambda x: (x-1024)/1024, # 1024, 2048
+                      'transformer_model_size': lambda x: (math.log(x,2)-8)/2 # 256, 512, 1024
                       # 'batch_size' 4096
 }
 
