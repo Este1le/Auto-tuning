@@ -55,7 +55,7 @@ def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, do
                 d = domain_name_lst[1:][i]
                 kernel += mapping[d](ndim=n_dims, axes=i)
         elif kernel_name == "logsquared":
-            kernel = kernels.LogSquared(ndim=n_dims)
+            kernel = kernels.LogSquaredKernel(initial_ls, ndim=n_dims)
 
     elif embedding_name == "bleu":
         kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)

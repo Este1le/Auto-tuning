@@ -6,6 +6,7 @@ from robo.fmin import bayesian_optimization
 import preprocess
 import rescale
 import get_kernel
+import get_mds_embedding
 
 logging.basicConfig(level=logging.INFO)
 
@@ -31,7 +32,7 @@ def get_args():
                         help='Input embedding. bleu: change input to bleu, to get bleu diff kernel.\
                         mds: multidimensional scaling to get embedding whose euclidean distance \
                         is close to the heuristic kernel.')
-    parser.add_argument('--embedding-distance', required=False, choices=['heuristic', 'bleudif'],
+    parser.add_argument('--embedding-distance', default="heuristic", choices=['heuristic', 'bleudif'],
                         help='The kernel to match when using mds.')
 
     # Bayesian Optimization arguments 
@@ -71,10 +72,6 @@ def get_args():
 
     if args.architecture == 'rnn' and 'rnn_cell_type' not in vars(args):
         parser.error('--rnn-cell-type is required if the architecture is rnn.')
-
-    if args.embedding == 'mds' and 'embedding_distance' not in vars(args):
-        parser.error('--embedding-distance is required if the embedding is mds.')
-
     return args
 
 def extract_data(args):
@@ -137,8 +134,8 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
     origin_rdl = embedding_lst[:]
     origin_el = eval_lst[:]
 
-    lower = np.array([min(min(embedding_lst))]*len(embedding_lst[0]))
-    upper = np.array([max(max(embedding_lst))]*len(embedding_lst[0]))
+    lower = np.array([np.amin(embedding_lst)]*len(embedding_lst[0]))
+    upper = np.array([np.amax(embedding_lst)]*len(embedding_lst[0]))
 
     results = []
     best_ind = []
@@ -174,12 +171,14 @@ def main():
     args = get_args()
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
     embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
-    kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.kernel, domain_name_lst, len(embedding_lst[0]))
+    kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.embedding_distance, args.kernel, 
+                                   domain_name_lst, len(embedding_lst[0]))
     if args.embedding == "mds":
         D = kernel.get_value(embedding_lst)
         D = np.exp(-np.array(D))
-        embedding_lst = get_mds_embedding.mds(D)
-        kernel = get_kernel.get_kernel(args.architecture, "logsquared", kernel_name, domain_name_lst, len(embedding_lst[0]))
+        embedding_lst, S = get_mds_embedding.mds(D)
+        kernel = get_kernel.get_kernel(args.architecture, "origin", args.embedding_distance, "logsquared", 
+                                       domain_name_lst, len(embedding_lst[0]))
 
     def objective_function(x):
         '''
