@@ -26,6 +26,12 @@ def get_args():
     parser.add_argument('--best', type=str, required=True, choices=['min', 'max'],
                         help='How should we get the best evaluation result in the pool? By min or max?')
 
+    # Input Embedding arguments
+    parser.add_argument('--embedding', required=True, choices=['origin', 'bleu', 'mds'],
+                        help='Input embedding. bleu: change input to bleu, to get bleu diff kernel.\
+                        mds: multidimensional scaling to get embedding whose euclidean distance \
+                        is close to the heuristic kernel.')
+
     # Bayesian Optimization arguments 
     parser.add_argument('--sampling-method', required=True, choices=["origin", "approx", "exact"],
                         help='Specify the method to choose next sample to update model.\
@@ -95,6 +101,14 @@ def extract_data(args):
 
     return rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST
 
+def get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst):
+    if args.embedding == "origin":
+        return rescaled_domain_lst
+    elif args.embedding == "bleu":
+        return [[e] for e in eval_lst]
+    elif args.embedding == "mds":
+        return []
+
 def write_results(args, results, best_ind, fix_budget, close_best):
 
     with open(args.output, "w") as f:
@@ -116,12 +130,12 @@ def write_results(args, results, best_ind, fix_budget, close_best):
         f.write("Ave: " + str(sum(fix_budget)/len(fix_budget)) + "\n")
         f.write("Std: " + str(np.std(fix_budget)) + "\n\n")
 
-def run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST):
-    origin_rdl = rescaled_domain_lst[:]
+def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, eval_lst, BEST, WORST):
+    origin_rdl = embedding_lst[:]
     origin_el = eval_lst[:]
 
-    lower = np.array([0]*len(rescaled_domain_lst[0]))
-    upper = np.array([1]*len(rescaled_domain_lst[0]))
+    lower = np.array([0]*len(embedding_lst[0]))
+    upper = np.array([1]*len(embedding_lst[0]))
 
     results = []
     best_ind = []
@@ -129,13 +143,13 @@ def run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_
     close_best = []
 
     for _ in range(args.num_run):
-        rescaled_domain_lst = origin_rdl[:]
+        embedding_lst = origin_rdl[:]
         eval_lst = origin_el[:]
         logging.info("#" + str(_) + " run of bayesian optimization.")
         result = bayesian_optimization(objective_function, lower,upper, acquisition_func=args.acquisition_func, 
                                        model_type=args.model_type, num_iterations=len(origin_rdl), kernel=kernel, 
                                        sampling_method=args.sampling_method, replacement=args.replacement, 
-                                       pool=np.array(rescaled_domain_lst), best=BEST)
+                                       pool=np.array(embedding_lst), best=BEST)
         results.append(result)
         invs = result["incumbent_values"]
 
@@ -156,22 +170,22 @@ def run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_
 def main():
     args = get_args()
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
-    kernel = get_kernel(args.architecture, rescaled_domain_lst, domain_name_lst)
+    embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
+    kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.kernel, domain_name_lst)
 
     def objective_function(x):
-    '''
-    Map a sampled domain to evaluation results returned from the model
-    :param x: domain sampled from bayesian optimization
-    :return: the corresponding evaluation result
-    '''
-    for i in range(len(rescaled_domain_lst)):
-        if (x == rescaled_domain_lst[i]).all():
-            return eval_lst[i]
+        '''
+        Map a sampled domain to evaluation results returned from the model
+        :param x: domain sampled from bayesian optimization
+        :return: the corresponding evaluation result
+        '''
+        for i in range(len(embedding_lst)):
+            if (x == embedding_lst[i]).all():
+                return eval_lst[i]
 
-    results, best_ind, fix_budget, close_best = run_bayesian_optimization(args, kernel, objective_function, rescaled_domain_lst, eval_lst, BEST, WORST)
+    results, best_ind, fix_budget, close_best = run_bayesian_optimization(args, kernel, objective_function, embedding_lst, eval_lst, BEST, WORST)
     write_results(args, results, best_ind, fix_budget, close_best)
     
 
 if __name__ == '__main__':
     main()
-
