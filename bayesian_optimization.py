@@ -31,6 +31,8 @@ def get_args():
                         help='Input embedding. bleu: change input to bleu, to get bleu diff kernel.\
                         mds: multidimensional scaling to get embedding whose euclidean distance \
                         is close to the heuristic kernel.')
+    parser.add_argument('--embedding-distance', required=False, choices=['heuristic', 'bleudif'],
+                        help='The kernel to match when using mds.')
 
     # Bayesian Optimization arguments 
     parser.add_argument('--sampling-method', required=True, choices=["origin", "approx", "exact"],
@@ -67,8 +69,11 @@ def get_args():
 
     args = parser.parse_args()
 
-    if args.architecture=='rnn' and 'rnn_cell_type' not in vars(args):
+    if args.architecture == 'rnn' and 'rnn_cell_type' not in vars(args):
         parser.error('--rnn-cell-type is required if the architecture is rnn.')
+
+    if args.embedding == 'mds' and 'embedding_distance' not in vars(args):
+        parser.error('--embedding-distance is required if the embedding is mds.')
 
     return args
 
@@ -102,12 +107,10 @@ def extract_data(args):
     return rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST
 
 def get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst):
-    if args.embedding == "origin":
+    if (args.embedding == "origin") or (args.embedding == "mds" and args.embedding_distance == "heuristic"):
         return rescaled_domain_lst
-    elif args.embedding == "bleu":
+    elif (args.embedding == "bleu") or (args.embedding == "mds" and args.embedding_distance == "bleudif"):
         return [[e] for e in eval_lst]
-    elif args.embedding == "mds":
-        return []
 
 def write_results(args, results, best_ind, fix_budget, close_best):
 
@@ -134,8 +137,8 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
     origin_rdl = embedding_lst[:]
     origin_el = eval_lst[:]
 
-    lower = np.array([0]*len(embedding_lst[0]))
-    upper = np.array([1]*len(embedding_lst[0]))
+    lower = np.array([min(min(embedding_lst))]*len(embedding_lst[0]))
+    upper = np.array([max(max(embedding_lst))]*len(embedding_lst[0]))
 
     results = []
     best_ind = []
@@ -171,7 +174,12 @@ def main():
     args = get_args()
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
     embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
-    kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.kernel, domain_name_lst)
+    kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.kernel, domain_name_lst, len(embedding_lst[0]))
+    if args.embedding == "mds":
+        D = kernel.get_value(embedding_lst)
+        D = np.exp(-np.array(D))
+        embedding_lst = get_mds_embedding.mds(D)
+        kernel = get_kernel.get_kernel(args.architecture, "logsquared", kernel_name, domain_name_lst, len(embedding_lst[0]))
 
     def objective_function(x):
         '''

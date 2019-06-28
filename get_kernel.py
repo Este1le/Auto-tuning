@@ -9,19 +9,24 @@ trans_domain_kernel_mapping = {"initial_learning_rate": kernels.TransInitialLear
                                "bpe_symbols": kernels.TransBpeSymbolsKernel,
                                "transformer_model_size": kernels.TransModelSizeKernel}
 
-def get_kernel(architecture, embedding, kernel_name, domain_name_lst):
+def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, domain_name_lst, n_dims):
 
     if architecture == "trans":
         mapping = trans_domain_kernel_mapping
     else:
         mapping = None
 
-    n_dims = len(domain_name_lst)
+    kernel = None
     initial_ls = np.ones([n_dims])
 
-    kernel = None
+    if embedding_name == "mds":
+        if embedding_distance == "heuristic":
+            embedding_name = "origin"
+            kernel_name = "heuristic"
+        elif embedding_distance == "bleudif":
+            embedding_name = "bleu"
 
-    if embedding == "origin":
+    if embedding_name == "origin":
         if kernel_name == "constant":
             kernel = kernels.ConstantKernel(1, ndim=n_dims)
         elif kernel_name == "polynomial":
@@ -49,11 +54,11 @@ def get_kernel(architecture, embedding, kernel_name, domain_name_lst):
             for i in range(len(domain_name_lst[1:])):
                 d = domain_name_lst[1:][i]
                 kernel += mapping[d](ndim=n_dims, axes=i)
-    elif embedding == "bleu":
-        n_dims = 1
+        elif kernel_name == "logsquared":
+            kernel = kernels.LogSquared(ndim=n_dims)
+
+    elif embedding_name == "bleu":
         kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)
-    elif embedding == "mds":
-        pass
 
     return kernel
 
