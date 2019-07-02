@@ -142,12 +142,24 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
     fix_budget = []
     close_best = []
 
-    for _ in range(args.num_run):
+    for i in range(args.num_run):
         embedding_lst = origin_rdl[:]
         eval_lst = origin_el[:]
-        logging.info("#" + str(_) + " run of bayesian optimization.")
+        logging.info("# %d run of bayesian optimization.", i)
+
+        # get the initialization
+        if i < len(embedding_lst)-2:
+            start = i
+            end = i+2
+        else:
+            start = i%len(embedding_lst)
+            end = i%(embedding_lst)+2
+        x_init = embedding_lst[start:end]
+        y_init = eval_lst[start:end]
+
         result = bayesian_optimization(objective_function, lower,upper, acquisition_func=args.acquisition_func, 
-                                       model_type=args.model_type, num_iterations=len(origin_rdl), kernel=kernel, 
+                                       model_type=args.model_type, num_iterations=len(origin_rdl), 
+                                       X_init=x_init, Y_init=y_init, kernel=kernel, 
                                        sampling_method=args.sampling_method, replacement=args.replacement, 
                                        pool=np.array(embedding_lst), best=BEST)
         results.append(result)
@@ -171,6 +183,11 @@ def main():
     args = get_args()
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
     embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
+
+    # shuffle the data
+    random.Random(37).shuffle(embedding_lst)
+    random.Random(37).shuffle(eval_lst)
+
     kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.embedding_distance, args.kernel, 
                                    domain_name_lst, len(embedding_lst[0]))
     if args.embedding == "mds":
