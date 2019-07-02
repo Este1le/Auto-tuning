@@ -1,7 +1,7 @@
 import argparse
 import logging
+import random
 import numpy as np
-from sklearn import metrics
 from robo.fmin import bayesian_optimization
 import preprocess
 import rescale
@@ -153,9 +153,9 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
             end = i+2
         else:
             start = i%len(embedding_lst)
-            end = i%(embedding_lst)+2
-        x_init = embedding_lst[start:end]
-        y_init = eval_lst[start:end]
+            end = i%len(embedding_lst)+2
+        x_init = np.array(embedding_lst[start:end])
+        y_init = np.array(eval_lst[start:end])
 
         result = bayesian_optimization(objective_function, lower,upper, acquisition_func=args.acquisition_func, 
                                        model_type=args.model_type, num_iterations=len(origin_rdl), 
