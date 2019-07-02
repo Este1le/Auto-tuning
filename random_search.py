@@ -21,6 +21,10 @@ def get_args():
     parser.add_argument('--best', type=str, required=True, choices=['min', 'max'],
                         help='How should we get the best evaluation result in the pool? By min or max?')
 
+    # Random Search arguments
+    parser.add_argument('--num-run', type=int, default=100,
+                        help='Number of random search runs.')
+
     # Evaluation arguments
     parser.add_argument('--budget', type=int, default=10,
                         help='This is for the use of measuring the performance of random search given limited budget.\
@@ -78,17 +82,21 @@ def run_random_search(args, eval_lst, BEST):
     best_ind = []
     fix_budget = []
     close_best = []
+    origin_eval_lst = eval_lst[:]
 
     for i in range(args.num_run):
         sampled_id = []
         invs = []
+        eval_lst = origin_eval_lst[:]
 
         logging.info("# %d run of random search.", i)
 
         while BEST not in invs:
             n = random.choice(range(len(eval_lst)))
-            eval_lst = eval_lst[:n] + eval_lst[n+1:]
             invs.append(eval_lst[n])
+            eval_lst = eval_lst[:n] + eval_lst[n+1:]
+
+        logging.info("%d number of iterations to get the best.\n", len(invs))
 
         results.append(invs)
 

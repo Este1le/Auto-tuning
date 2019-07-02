@@ -53,7 +53,7 @@ def get_args():
 
     # Gaussian Process arguments
     parser.add_argument('--kernel', required=True, type=str, choices=["constant", "polynomial", "linear", "dotproduct",
-                        "exp", "expsquared", "matern32", "matern52", "rationalquadratic","cosine", "expsine2", "heuristic"],
+                        "exp", "expsquared", "matern32", "matern52", "rationalquadratic", "expsine2", "heuristic", "weightheuristic"],
                         help='Specify the kernel for Gaussian process.')
 
     # Evaluation arguments

@@ -54,6 +54,13 @@ def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, do
             for i in range(len(domain_name_lst[1:])):
                 d = domain_name_lst[1:][i]
                 kernel += mapping[d](ndim=n_dims, axes=i)
+        elif kernel_name == "weightheuristic":
+            kernel = mapping[domain_name_lst[0]](ndim=n_dims, axes=0) \
+                     * kernels.ExpSquaredKernel(initial_ls, ndim=n_dims, axes=0)
+            for i in range(len(domain_name_lst[1:])):
+                d = domain_name_lst[1:][i]
+                kernel += mapping[d](ndim=n_dims, axes=i) \
+                          * kernels.ExpSquaredKernel(initial_ls, ndim=n_dims, axes=i)
         elif kernel_name == "logsquared":
             kernel = kernels.LogSquaredKernel(initial_ls, ndim=n_dims)
 
