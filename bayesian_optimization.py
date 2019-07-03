@@ -53,8 +53,10 @@ def get_args():
 
     # Gaussian Process arguments
     parser.add_argument('--kernel', required=True, type=str, choices=["constant", "polynomial", "linear", "dotproduct",
-                        "exp", "expsquared", "matern32", "matern52", "rationalquadratic", "expsine2", "heuristic", "weightheuristic"],
+                        "exp", "expsquared", "matern32", "matern52", "rationalquadratic", "expsine2", "heuristic"],
                         help='Specify the kernel for Gaussian process.')
+    parser.add_argument('--weight', action='store_true',
+                        help="Whether to multiply the heuristic weight for the kernel.")
 
     # Evaluation arguments
     parser.add_argument('--budget', type=int, default=10,
@@ -150,10 +152,10 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
         # get the initialization
         if i < len(embedding_lst)-2:
             start = i
-            end = i+2
+            end = i+3
         else:
-            start = i%len(embedding_lst)
-            end = i%len(embedding_lst)+2
+            start = i%(len(embedding_lst)-2)
+            end = i%(len(embedding_lst)-2)+3
         x_init = np.array(embedding_lst[start:end])
         y_init = np.array(eval_lst[start:end])
 
@@ -189,13 +191,13 @@ def main():
     random.Random(37).shuffle(eval_lst)
 
     kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.embedding_distance, args.kernel, 
-                                   domain_name_lst, len(embedding_lst[0]))
+                                   domain_name_lst, len(embedding_lst[0]), args.weight)
     if args.embedding == "mds":
         D = kernel.get_value(embedding_lst)
         D = np.exp(-np.array(D))
         embedding_lst, S = get_mds_embedding.mds(D)
         kernel = get_kernel.get_kernel(args.architecture, "origin", args.embedding_distance, "logsquared", 
-                                       domain_name_lst, len(embedding_lst[0]))
+                                       domain_name_lst, len(embedding_lst[0]), args.weight)
 
     def objective_function(x):
         '''

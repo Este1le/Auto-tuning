@@ -15,4 +15,5 @@ python ${workdir}/bayesian_optimization.py --modeldir ${modeldir} \
 										   --budget ${budget} \
 										   --dif ${dif} \
 										   --output ${output} \
+										   ${weight} \
 										   ${replacement} 
