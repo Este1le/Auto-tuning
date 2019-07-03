@@ -26,8 +26,8 @@ def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, do
         elif embedding_distance == "bleudif":
             embedding_name = "bleu"
 
-    if not weight:
-        if embedding_name == "origin":
+    if embedding_name == "origin":
+        if not weight:
             if kernel_name == "constant":
                 kernel = kernels.ConstantKernel(1, ndim=n_dims)
             elif kernel_name == "polynomial":
@@ -64,11 +64,7 @@ def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, do
                               * kernels.ExpSquaredKernel(metric=1, ndim=n_dims, axes=i)
             elif kernel_name == "logsquared":
                 kernel = kernels.LogSquaredKernel(initial_ls, ndim=n_dims)
-
-        elif embedding_name == "bleu":
-            kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)
-    else:
-        if embedding_name == "origin":
+        else:
             if kernel_name == "constant":
                 kernel = mapping[domain_name_lst[0]](ndim=n_dims, axes=0)
                 for i in range(len(domain_name_lst[1:])):
@@ -164,8 +160,13 @@ def get_kernel(architecture, embedding_name, embedding_distance, kernel_name, do
             elif kernel_name == "logsquared":
                 kernel = kernels.LogSquaredKernel(initial_ls, ndim=n_dims)
 
-        elif embedding_name == "bleu":
-            kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)
+    elif embedding_name == "bleu":
+        kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)
+
+    elif embedding_name == "ml":
+        initial_ls = np.ones([n_dims])*100
+        kernel = kernels.ExpSquaredKernel(initial_ls, ndim=n_dims)
+
 
     return kernel
 

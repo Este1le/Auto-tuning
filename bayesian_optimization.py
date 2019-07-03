@@ -7,6 +7,7 @@ import preprocess
 import rescale
 import get_kernel
 import get_mds_embedding
+from metric_learn import MLKR
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,10 +29,11 @@ def get_args():
                         help='How should we get the best evaluation result in the pool? By min or max?')
 
     # Input Embedding arguments
-    parser.add_argument('--embedding', required=True, choices=['origin', 'bleu', 'mds'],
+    parser.add_argument('--embedding', required=True, choices=['origin', 'bleu', 'mds', 'ml'],
                         help='Input embedding. bleu: change input to bleu, to get bleu diff kernel.\
                         mds: multidimensional scaling to get embedding whose euclidean distance \
-                        is close to the heuristic kernel.')
+                        is close to the heuristic kernel. \
+                        ml: metric learning for kernel regression.')
     parser.add_argument('--embedding-distance', default="heuristic", choices=['heuristic', 'bleudif'],
                         help='The kernel to match when using mds.')
 
@@ -110,6 +112,12 @@ def get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst):
         return rescaled_domain_lst
     elif (args.embedding == "bleu") or (args.embedding == "mds" and args.embedding_distance == "bleudif"):
         return [[e] for e in eval_lst]
+    elif (args.embedding == "ml"):
+        mlkr = MLKR()
+        x = np.array(rescaled_domain_lst)
+        y = np.array(eval_lst)
+        mlkr.fit(x, y)
+        return mlkr.transform(x)
 
 def write_results(args, results, best_ind, fix_budget, close_best):
 
