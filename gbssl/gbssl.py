@@ -17,6 +17,8 @@ def get_args():
     # Objective Metric arguments
     parser.add_argument('--metric', required=True, choices=['dev_ppl', 'dev_bleu'],
                         help='The objective metric.')
+    parser.add_argument('--best', type=str, required=True, choices=['min', 'max'],
+                        help='How should we get the best evaluation result in the pool? By min or max?')
 
     # Graph arguments
     parser.add_argument('--distance', required=True, choices=['euclidean', 'dotproduct', 'cosinesim', 'constant'],
@@ -38,6 +40,7 @@ def get_args():
 def main():
     args = get_args()
 
+    print("Extracting data ...")
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = \
         preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric)
 
@@ -47,6 +50,7 @@ def main():
     ind_label = np.arange(3)
     num_label = 3
 
+    print("Building the graph ...")
     graph_obj = graph.Graph(X, Y, args.distance, args.sparsity,
                         args.distance_param, args.k, ind_label, num_label)
     num_update = 1

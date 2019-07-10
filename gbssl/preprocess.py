@@ -156,13 +156,13 @@ def extract_data(modeldir, architecture, rnn_cell_type, metric, best):
         rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
 
     # The objective we want to optimize
-    if best == 'min':
+    if best == 'max':
         eval_lst = [e[metric] for e in eval_dict_lst]
         WORST = 100000
     else:
         eval_lst = [-e[metric] for e in eval_dict_lst]
         WORST = 0
-    BEST = min(eval_lst)
+    BEST = max(eval_lst)
 
     # shuffle the data
     random.Random(37).shuffle(rescaled_domain_lst)

@@ -1,6 +1,5 @@
 import argparse
 import logging
-import random
 import numpy as np
 from robo.fmin import bayesian_optimization
 import preprocess
@@ -163,8 +162,8 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
 def main():
     args = get_args()
     logging.info("Extracting domains and evaluation results for all models")
-    rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = 
-        preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric)
+    rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = \
+        preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric, args.best)
     embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
 
     kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.embedding_distance, args.kernel, 
