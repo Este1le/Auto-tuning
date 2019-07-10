@@ -8,7 +8,7 @@ import numpy as np
 import logging
 
 class Regression():
-    def __init__(self, x, weight, ind_label, y_label, alpha=0.05, tolerance=1e-4, r=0.001):
+    def __init__(self, x, weight, ind_label, y_label, logger, alpha=0.05, tolerance=1e-4, r=0.001):
         # x: np.ndarray((n,d)), domain vectors
         self.x = np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)
         # weight: np.ndarray((n,n)), the edge weight matrix
@@ -33,6 +33,8 @@ class Regression():
 
         # theta: np.ndarray((d+1,1)), initial parameters for the linear function
         self.theta = np.random.rand((self.d))
+
+        self.logger = logger
 
     def _gradient(self):
         '''
@@ -113,7 +115,7 @@ class Regression():
 
     def log(self, x, y, num_label, ind_label):
         y_new = self.predict(np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)).flatten()
-        logging.info("New labels: {0}".format(y_new))
+        self.logger.info("New labels: {0}".format(y_new))
         # the best predicted y must be one of the top (num_label+1) predicted labels
         top_new_ind = np.flip(np.argsort(y_new)[-(num_label+1):])
         for id in top_new_ind:
@@ -122,10 +124,12 @@ class Regression():
             else:
                 best_new_ind = id
                 break
-        logging.info("Next point: ")
-        logging.info(x[best_new_ind])
-        logging.info("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], y[best_new_ind]))
+        self.logger.info("Next point: ")
+        self.logger.info(x[best_new_ind])
+        self.logger.info("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], y[best_new_ind]))
         best_ind = np.argmax(y)
-        logging.info("Estimated label for the true best: {0}".format(y_new[best_ind]))
+        self.logger.info("Estimated label for the true best: {0}".format(y_new[best_ind]))
+
+        return best_new_ind
 
 

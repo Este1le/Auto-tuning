@@ -10,7 +10,7 @@ import regression
 import logging
 
 class Graph():
-    def __init__(self, x, y, distance, sparsity, distance_param=None, k=5, ind_label=None, num_label=5):
+    def __init__(self, x, y, distance, sparsity, logger, distance_param=None, k=5, ind_label=None, num_label=5):
         # x: np.ndarray((n,d)), domain vectors
         self.x = x
         # y: np.ndarray((n,1)), labels
@@ -61,6 +61,8 @@ class Graph():
         # x_unlabel: np.ndarray((u,d)), unlabeled domain vectors
         self.x_unlabel  = self.x[self.ind_unlabel]
         self.num_label = self.x_label.shape[0]
+
+        self.logger = logger
 
     def _euclidean(self):
         '''
@@ -121,17 +123,17 @@ class Graph():
         self.ind_label = np.random.choice(self.n, self.num_label)
 
     def update(self):
-        logging.info("Labeled points ({0}): ".format(self.num_label))
-        logging.info(self.x_label)
-        logging.info(self.y_label)
+        self.logger.info("Labeled points ({0}): ".format(self.num_label))
+        self.logger.info(self.x_label)
+        self.logger.info(self.y_label)
 
         # 1. train the model
-        logging.info("Start training ... ")
-        reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label)
+        self.logger.info("Start training ... ")
+        reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label, self.logger)
         reg.train()
 
         # 2. log info
-        reg.log(self.x, self.y, self.num_label, self.ind_label)
+        best_new_ind = reg.log(self.x, self.y, self.num_label, self.ind_label)
 
         # 3. update the graph
         self.ind_label = np.append(self.ind_label, best_new_ind)

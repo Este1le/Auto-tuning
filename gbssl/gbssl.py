@@ -108,7 +108,7 @@ def main():
         num_label = 3
 
         logger.info("Building the graph ...")
-        graph_obj = graph.Graph(X, Y, args.distance, args.sparsity,
+        graph_obj = graph.Graph(X, Y, args.distance, args.sparsity, logger,
                             args.distance_param, args.k, ind_label, num_label)
         num_update = 1
         while True:
