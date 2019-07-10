@@ -7,9 +7,9 @@ Graph-based Semi-Supervised Regression.
 import numpy as np
 
 class Regression():
-    def __init__(self, x, weight, ind_label, y_label, alpha=0.5, tolerance=1e-5, r=1):
+    def __init__(self, x, weight, ind_label, y_label, alpha=0.1, tolerance=1e-5, r=0.001):
         # x: np.ndarray((n,d)), domain vectors
-        self.x = np.pad(x, (1,), 'constant', constant_values=(1))
+        self.x = np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)
         # weight: np.ndarray((n,n)), the edge weight matrix
         self.weight = weight
         # ind_label: np.ndarray((l,1)), the indices for labeled points
@@ -18,6 +18,7 @@ class Regression():
         self.x_label = self.x[self.ind_label]
         # y_label: np.ndarray((l,1)), known labels
         self.y_label = y_label
+        self.l = self.y_label.shape[0   ]
 
         # alpha: learning rate
         self.alpha = alpha
@@ -31,29 +32,30 @@ class Regression():
 
         # theta: np.ndarray((d+1,1)), initial parameters for the linear function
         self.theta = np.random.rand((self.d))
-        self.gradient = 0
-        self.loss = 0
 
     def _gradient(self):
         '''
         Get the gradient.
         '''
         first = 0
+        y_ = self.predict(self.x_label).tolist()
+        y_label = self.y_label.tolist()
+        x_label = self.x_label.tolist()
         for i in range(self.l):
-            y_ = self.predict(self.x_label[i])
-            y = self.y_label[i]
-            first += (y_ - y) * self.x_label[i]
+            first += (y_[i] - y_label[i]) * x_label[i]
         first *= 2./self.l
 
         second = 0
+        y_ = self.predict(self.x).tolist()
+        weight = self.weight.tolist()
+        x = self.x.tolist()
         for a in range(self.n):
             for b in range(self.n):
-                ya_ = self.predict(self.x[a])
-                yb_ = self.predict(self.x[b])
-                second += (ya_ - yb_) * self.weight[a][b] * (self.x[a]-self.x[b])
+                second += (y_[a] - y_[b]) * weight[a][b] * (x[a]-x[b])
         second *= 2*self.r
 
-        self._gradient = first + second
+        gradient = first + second
+        return gradient
 
     def predict(self, x):
         '''
@@ -68,27 +70,30 @@ class Regression():
         Get the loss/energy.
         '''
         first = 0
+        y_ = self.predict(self.x_label).tolist()
+        y_label = self.y_label.tolist()
         for i in range(self.l):
-            y_ = self.predict(self.x_label[i])
-            y = self.y_label[i]
-            first += np.square(y_ - y)
+            first += (y_[i] - y_label[i])*(y_[i] - y_label[i])
         first *= 1./self.l
 
         second = 0
+        y_ = self.predict(self.x).tolist()
+        weight = self.weight.tolist()
         for a in range(self.n):
             for b in range(self.n):
-                ya_ = self.predict(self.x[a])
-                yb_ = self.predict(self.x[b])
-                second += np.square(ya_ - yb_) * self.weight[a][b]
-        second *= r
+                second += (y_[a] - y_[b]) * (y_[a] - y_[b]) * weight[a][b]
+        second *= self.r
 
-        self.loss = first + second
+        loss = first + second
+
+        return loss
 
     def train(self):
         '''
         Perform gradient descent.
         '''
         iterations = 1
+        old_loss = 0
         while True:
             new_theta = self.theta - self.alpha * self._gradient()
 
@@ -97,8 +102,12 @@ class Regression():
                 print("Converged.")
                 break
 
-            if iterations % 100 == 0:
-                print("Iteration: {0} - Loss: {1:.4f}".format(iterations, self.loss()))
+            if iterations % 10 == 0:
+                new_loss = self.loss()
+                print("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
+
+                if np.abs(old_loss - new_loss) < self.r/10:
+                    self.r /= 10
 
             iterations += 1
             self.theta = new_theta

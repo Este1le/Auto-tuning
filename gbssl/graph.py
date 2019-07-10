@@ -33,7 +33,7 @@ class Graph():
         # n: number of examples
         self.n = self.x.shape[0]
         # weight: the weight matrix
-        self.weight = np.ndarray((n,n))
+        self.weight = np.ndarray((self.n,self.n))
 
         if self.distance == "euclidean":
             self._euclidean()
@@ -47,7 +47,7 @@ class Graph():
         if self.sparsity == "knn":
             self._knn()
 
-        if self.ind_label == None:
+        if self.ind_label is None:
             self._labeled_points()
             # ind_unlabeled: np.ndarray((u,1)), the indices of unlabeled data points
             self.ind_unlabel = np.setdiff1d(np.arange(self.n), self._labeled_points())
@@ -65,7 +65,7 @@ class Graph():
         '''
         Calculate the Euclidean weight.
         '''
-        if self.distance_param == None:
+        if self.distance_param is None:
             # set a heuristic param by minimum spanning tree
             # reference: Semi-Supervised Learning with Graphs, Xiaojin Zhu, 2005, section 7.3.
             # x is scaled to [0,1], the maximum difference between xi and xj is d
@@ -87,7 +87,7 @@ class Graph():
         '''
         Calculate the cosine similarity weight.
         '''
-        if self.distance_param == None:
+        if self.distance_param is None:
             self.distance_param = 0.03
         for i in range(self.n):
             for j in range(self.n):
@@ -99,7 +99,7 @@ class Graph():
         '''
         Set all the weights to a constant.
         '''
-        if self.distance_param == None:
+        if self.distance_param is None:
             self.distance_param = 1
         self.weight = np.ones((self.n, self.n)) * self.distance_param
 
@@ -126,7 +126,7 @@ class Graph():
         print(self.y_label)
         print("Start training ... ")
         reg.train()
-        y_new = reg.predict(np.pad(self.x), (1,), 'constant', constant_values=(1)).flatten()
+        y_new = reg.predict(np.pad(self.x, ((0,0),(1,0)), 'constant', constant_values=1)).flatten()
         # the best predicted y must be one of the top (num_label+1) predicted labels
         top_new_ind = np.flip(np.argsort(y_new)[-(self.num_label+1):])
         for id in top_new_ind:
@@ -137,7 +137,9 @@ class Graph():
                 break
         print("Next point: ")
         print(self.x[best_new_ind])
-        print("Estimated label: {0}, Real label: {1}".format(y_new, self.y[best_new_ind]))
+        print("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], self.y[best_new_ind]))
+        best_ind = np.argmax(self.y_label)
+        print("Estimated label for the true best: {0}".format(y[best_ind]))
         self.ind_label = np.append(self.ind_label, best_new_ind)
         self.y_label = self.y[self.ind_label]
         self.x_label = self.x[self.ind_label]

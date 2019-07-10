@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 import rescale
 
 def readfile(f):
