@@ -5,6 +5,10 @@ import numpy as np
 import preprocess
 import graph
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
 def get_args():
     parser = argparse.ArgumentParser(description='Graph-Based Semi-Supervised Learning.')
 
@@ -54,9 +58,13 @@ def get_args():
 
     return args
 
-def write_results(args, best_ind, fix_budget, close_best):
+def write_results(args, best_ind, fix_budget, close_best, graph_obj):
 
     with open(args.output, "w") as f:
+        f.write("Labeled points ({0}): \n".format(graph_obj.num_label))
+        f.write(str(graph_obj.x_label) + "\n")
+        f.write(str(graph_obj.y_label) + "\n\n")
+
         f.write("########################################\n\n")
         f.write("Best ind\n")
         f.write(str(best_ind) + "\n")
@@ -76,11 +84,11 @@ def write_results(args, best_ind, fix_budget, close_best):
 def main():
     args = get_args()
 
-    print("Extracting data ...")
+    # 0. Prepare data
+    logger.info("Extracting data ...")
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = \
         preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric, args.best)
-    print("Best point: {0}".format(BEST))
-
+    logger.info("Best point: {0}".format(BEST))
     X = np.array(rescaled_domain_lst)
     Y = np.array(eval_lst)
 
@@ -89,15 +97,15 @@ def main():
     close_best = []
 
     for nr in range(args.num_run):
+        # 1. setup logger
         logdir = args.output + "_log"
         if not os.path.isdir(logdir):
             os.mkdir(logdir)
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
         file_handler = logging.FileHandler(logdir+"/"+str(nr)+".log")
+        file_handler.setLevel(logging.INFO)
         logger.addHandler(file_handler)
 
-        # get the initialization
+        # 2. Initialization
         if nr < X.shape[0]-2:
             start = nr
             end = nr+3
@@ -107,6 +115,7 @@ def main():
         ind_label = np.arange(start, end)
         num_label = 3
 
+        # 3. Find the best label
         logger.info("Building the graph ...")
         graph_obj = graph.Graph(X, Y, args.distance, args.sparsity, logger,
                             args.distance_param, args.k, ind_label, num_label)
@@ -120,14 +129,14 @@ def main():
                 break
             num_update += 1
 
+        # 4. Write stats
         best_ind.append(graph_obj.y_label.shape[0]-3)
         fix_budget.append(abs(max(graph_obj.y_label[:args.budget])-BEST))
         for i in range(graph_obj.y_label.shape[0]):
             if abs(graph_obj.y_label[i]-BEST) <= args.dif:
                 close_best.append(i+1)
                 break
-
-        write_results(args, best_ind, fix_budget, close_best)
+        write_results(args, best_ind, fix_budget, close_best, graph_obj)
 
 if __name__ == "__main__":
     main()

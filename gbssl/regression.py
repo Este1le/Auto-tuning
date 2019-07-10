@@ -100,12 +100,12 @@ class Regression():
 
             # stopping condition
             if np.sum(abs(new_theta - self.theta)) < self.tolerance:
-                logging.info("Converged.")
+                self.logger.info("Converged.")
                 break
 
             if iterations % 10 == 0:
                 new_loss = self.loss()
-                logging.info("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
+                self.logger.info("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
 
                 if np.abs(old_loss - new_loss) < self.r/10:
                     self.r /= 10
