@@ -5,9 +5,10 @@ Graph-based Semi-Supervised Regression.
 # Authors: Xuan Zhang <xuanzhang@jhu.edu>
 # Lisence: MIT
 import numpy as np
+import logging
 
 class Regression():
-    def __init__(self, x, weight, ind_label, y_label, alpha=0.1, tolerance=1e-5, r=0.001):
+    def __init__(self, x, weight, ind_label, y_label, alpha=0.05, tolerance=1e-4, r=0.001):
         # x: np.ndarray((n,d)), domain vectors
         self.x = np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)
         # weight: np.ndarray((n,n)), the edge weight matrix
@@ -40,18 +41,16 @@ class Regression():
         first = 0
         y_ = self.predict(self.x_label).tolist()
         y_label = self.y_label.tolist()
-        x_label = self.x_label.tolist()
         for i in range(self.l):
-            first += (y_[i] - y_label[i]) * x_label[i]
+            first += (y_[i] - y_label[i]) * self.x_label[i]
         first *= 2./self.l
 
         second = 0
         y_ = self.predict(self.x).tolist()
         weight = self.weight.tolist()
-        x = self.x.tolist()
         for a in range(self.n):
             for b in range(self.n):
-                second += (y_[a] - y_[b]) * weight[a][b] * (x[a]-x[b])
+                second += (y_[a] - y_[b]) * weight[a][b] * (self.x[a]-self.x[b])
         second *= 2*self.r
 
         gradient = first + second
@@ -99,12 +98,12 @@ class Regression():
 
             # stopping condition
             if np.sum(abs(new_theta - self.theta)) < self.tolerance:
-                print("Converged.")
+                logging.info("Converged.")
                 break
 
             if iterations % 10 == 0:
                 new_loss = self.loss()
-                print("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
+                logging.info("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
 
                 if np.abs(old_loss - new_loss) < self.r/10:
                     self.r /= 10

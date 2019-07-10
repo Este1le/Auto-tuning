@@ -7,6 +7,7 @@ Build graph for the use of Graph-based Semi-Supervised Learning.
 
 import numpy as np
 import regression
+import logging
 
 class Graph():
     def __init__(self, x, y, distance, sparsity, distance_param=None, k=5, ind_label=None, num_label=5):
@@ -121,10 +122,10 @@ class Graph():
 
     def update(self):
         reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label)
-        print("Labeled points ({0}): ".format(self.num_label))
-        print(self.x_label)
-        print(self.y_label)
-        print("Start training ... ")
+        logging.info("Labeled points ({0}): ".format(self.num_label))
+        logging.info(self.x_label)
+        logging.info(self.y_label)
+        logging.info("Start training ... ")
         reg.train()
         y_new = reg.predict(np.pad(self.x, ((0,0),(1,0)), 'constant', constant_values=1)).flatten()
         # the best predicted y must be one of the top (num_label+1) predicted labels
@@ -135,11 +136,11 @@ class Graph():
             else:
                 best_new_ind = id
                 break
-        print("Next point: ")
-        print(self.x[best_new_ind])
-        print("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], self.y[best_new_ind]))
-        best_ind = np.argmax(self.y_label)
-        print("Estimated label for the true best: {0}".format(y[best_ind]))
+        logging.info("Next point: ")
+        logging.info(self.x[best_new_ind])
+        logging.info("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], self.y[best_new_ind]))
+        best_ind = np.argmax(self.y)
+        logging.info("Estimated label for the true best: {0}".format(y_new[best_ind]))
         self.ind_label = np.append(self.ind_label, best_new_ind)
         self.y_label = self.y[self.ind_label]
         self.x_label = self.x[self.ind_label]
