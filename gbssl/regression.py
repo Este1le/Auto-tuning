@@ -111,3 +111,21 @@ class Regression():
             iterations += 1
             self.theta = new_theta
 
+    def log(self, x, y, num_label, ind_label):
+        y_new = self.predict(np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)).flatten()
+        logging.info("New labels: {0}".format(y_new))
+        # the best predicted y must be one of the top (num_label+1) predicted labels
+        top_new_ind = np.flip(np.argsort(y_new)[-(num_label+1):])
+        for id in top_new_ind:
+            if id in ind_label:
+                continue
+            else:
+                best_new_ind = id
+                break
+        logging.info("Next point: ")
+        logging.info(x[best_new_ind])
+        logging.info("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], y[best_new_ind]))
+        best_ind = np.argmax(y)
+        logging.info("Estimated label for the true best: {0}".format(y_new[best_ind]))
+
+

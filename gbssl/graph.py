@@ -121,26 +121,19 @@ class Graph():
         self.ind_label = np.random.choice(self.n, self.num_label)
 
     def update(self):
-        reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label)
         logging.info("Labeled points ({0}): ".format(self.num_label))
         logging.info(self.x_label)
         logging.info(self.y_label)
+
+        # 1. train the model
         logging.info("Start training ... ")
+        reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label)
         reg.train()
-        y_new = reg.predict(np.pad(self.x, ((0,0),(1,0)), 'constant', constant_values=1)).flatten()
-        # the best predicted y must be one of the top (num_label+1) predicted labels
-        top_new_ind = np.flip(np.argsort(y_new)[-(self.num_label+1):])
-        for id in top_new_ind:
-            if id in self.ind_label:
-                continue
-            else:
-                best_new_ind = id
-                break
-        logging.info("Next point: ")
-        logging.info(self.x[best_new_ind])
-        logging.info("Estimated label: {0}, Real label: {1}".format(y_new[best_new_ind], self.y[best_new_ind]))
-        best_ind = np.argmax(self.y)
-        logging.info("Estimated label for the true best: {0}".format(y_new[best_ind]))
+
+        # 2. log info
+        reg.log(self.x, self.y, self.num_label, self.ind_label)
+
+        # 3. update the graph
         self.ind_label = np.append(self.ind_label, best_new_ind)
         self.y_label = self.y[self.ind_label]
         self.x_label = self.x[self.ind_label]

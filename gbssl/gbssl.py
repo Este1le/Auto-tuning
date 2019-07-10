@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import numpy as np
 import preprocess
 import graph
@@ -88,32 +89,34 @@ def main():
     close_best = []
 
     for nr in range(args.num_run):
-
-        logdir = output + "_log"
+        logdir = args.output + "_log"
         if not os.path.isdir(logdir):
             os.mkdir(logdir)
-        logging.basicConfig(filename=logdir+"/"+str(nr)+".log", level=logging.INFO)
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+        file_handler = logging.FileHandler(logdir+"/"+str(nr)+".log")
+        logger.addHandler(file_handler)
 
         # get the initialization
         if nr < X.shape[0]-2:
-            start = i
-            end = i+3
+            start = nr
+            end = nr+3
         else:
-            start = i%(X.shape[0]-2)
-            end = i%(X.shape[0]-2)+3
+            start = nr%(X.shape[0]-2)
+            end = nr%(X.shape[0]-2)+3
         ind_label = np.arange(start, end)
         num_label = 3
 
-        logging.info("Building the graph ...")
+        logger.info("Building the graph ...")
         graph_obj = graph.Graph(X, Y, args.distance, args.sparsity,
                             args.distance_param, args.k, ind_label, num_label)
         num_update = 1
         while True:
-            logging.info("###############################")
-            logging.info("Update # {0}: ".format(num_update))
+            logger.info("###############################")
+            logger.info("Update # {0}: ".format(num_update))
             graph_obj.update()
             if BEST in graph_obj.y_label:
-                logging.info("Found the best configuration at update # {0}".format(num_update))
+                logger.info("Found the best configuration at update # {0}".format(num_update))
                 break
             num_update += 1
 
