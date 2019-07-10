@@ -78,35 +78,6 @@ def get_args():
         parser.error('--rnn-cell-type is required if the architecture is rnn.')
     return args
 
-def extract_data(args):
-    logging.info("Extracting domains and evaluation results for all models")
-    domain_eval_lst = preprocess.get_all_domain_eval(args.modeldir)
-    if args.architecture == 'rnn':
-        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.architecture) and (de[0]['rnn_cell_type']==args.rnn_cell_type)]
-    else:
-        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==args.architecture)]
-
-    domain_dict_lst, eval_dict_lst = list(list(zip(*domain_eval_lst_arch))[0]), list(list(zip(*domain_eval_lst_arch))[1])
-
-    # Rescale values to the range [0,1] and turn dictionary into list
-    if args.architecture=='rnn':
-        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.rnn_rescale_dict)
-    elif args.architecture=='cnn':
-        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.cnn_rescale_dict)
-    elif args.architecture=='trans':
-        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
-
-    # The objective we want to optimize
-    if args.best == 'min':
-        eval_lst = [e[args.metric] for e in eval_dict_lst]
-        WORST = 100000
-    else:
-        eval_lst = [-e[args.metric] for e in eval_dict_lst]
-        WORST = 0
-    BEST = min(eval_lst)
-
-    return rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST
-
 def get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst):
     if (args.embedding == "origin") or (args.embedding == "mds" and args.embedding_distance == "heuristic"):
         return rescaled_domain_lst
@@ -191,12 +162,10 @@ def run_bayesian_optimization(args, kernel, objective_function, embedding_lst, e
 
 def main():
     args = get_args()
-    rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = extract_data(args)
+    logging.info("Extracting domains and evaluation results for all models")
+    rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = 
+        preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric)
     embedding_lst = get_embedding(args, rescaled_domain_lst, domain_name_lst, eval_lst)
-
-    # shuffle the data
-    random.Random(37).shuffle(embedding_lst)
-    random.Random(37).shuffle(eval_lst)
 
     kernel = get_kernel.get_kernel(args.architecture, args.embedding, args.embedding_distance, args.kernel, 
                                    domain_name_lst, len(embedding_lst[0]), args.weight)
@@ -206,6 +175,9 @@ def main():
         embedding_lst, S = get_mds_embedding.mds(D)
         kernel = get_kernel.get_kernel(args.architecture, "origin", args.embedding_distance, "logsquared", 
                                        domain_name_lst, len(embedding_lst[0]), args.weight)
+    
+    logging.info("kernel: ", args.kernel)
+    logging.info(kernel.get_value(np.atleast_2d(rescaled_domain_lst)))
 
     def objective_function(x):
         '''

@@ -1,5 +1,6 @@
 import os
 import sys
+import rescale
 
 def readfile(f):
     '''
@@ -136,4 +137,36 @@ def get_all_domain_eval(models_dir):
             res.append((domain_dict, eval_dict))
 
     return res
+
+def extract_data(modeldir, architecture, rnn_cell_type, metric):
+    domain_eval_lst = get_all_domain_eval(modeldir)
+    if architecture == 'rnn':
+        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==architecture) and (de[0]['rnn_cell_type']==rnn_cell_type)]
+    else:
+        domain_eval_lst_arch = [de for de in domain_eval_lst if (de[0]['architecture']==architecture)]
+
+    domain_dict_lst, eval_dict_lst = list(list(zip(*domain_eval_lst_arch))[0]), list(list(zip(*domain_eval_lst_arch))[1])
+
+    # Rescale values to the range [0,1] and turn dictionary into list
+    if architecture=='rnn':
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.rnn_rescale_dict)
+    elif architecture=='cnn':
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.cnn_rescale_dict)
+    elif architecture=='trans':
+        rescaled_domain_lst, domain_name_lst = rescale.rescale(domain_dict_lst, rescale.trans_rescale_dict)
+
+    # The objective we want to optimize
+    if args.best == 'min':
+        eval_lst = [e[metric] for e in eval_dict_lst]
+        WORST = 100000
+    else:
+        eval_lst = [-e[metric] for e in eval_dict_lst]
+        WORST = 0
+    BEST = min(eval_lst)
+
+    # shuffle the data
+    random.Random(37).shuffle(rescaled_domain_lst)
+    random.Random(37).shuffle(eval_lst)
+
+    return rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST
 
