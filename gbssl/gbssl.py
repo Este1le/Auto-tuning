@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from ... import preprocess
+import preprocess
 import graph
 
 def get_args():
@@ -42,7 +42,7 @@ def main():
 
     print("Extracting data ...")
     rescaled_domain_lst, domain_name_lst, eval_lst, BEST, WORST = \
-        preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric)
+        preprocess.extract_data(args.modeldir, args.architecture, args.rnn_cell_type, args.metric, args.best)
 
     X = np.array(rescaled_domain_lst)
     Y = np.array(eval_lst)

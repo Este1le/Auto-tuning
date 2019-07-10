@@ -6,7 +6,6 @@ python ${workdir}/gbssl.py --modeldir ${modeldir} \
 						   --metric ${metric} \
 						   --best ${best} \
 						   --distance ${distance} \
-						   --distance-param ${distance_param} \
 						   --sparsity ${sparsity} \
 						   --k ${k}
 
