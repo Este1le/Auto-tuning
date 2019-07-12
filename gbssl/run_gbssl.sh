@@ -5,6 +5,7 @@ python ${workdir}/gbssl.py --modeldir ${modeldir} \
 						   --rnn-cell-type ${rnn_cell_type} \
 						   --metric ${metric} \
 						   --best ${best} \
+						   --model ${model} \
 						   --distance ${distance} \
 						   --sparsity ${sparsity} \
 						   --k ${k} \

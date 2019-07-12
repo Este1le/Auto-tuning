@@ -10,12 +10,17 @@ import regression
 import logging
 
 class Graph():
-    def __init__(self, x, y, distance, sparsity, logger, domain_name_lst,
+    def __init__(self, model, x, y, distance, sparsity, logger, domain_name_lst,
                  distance_param=None, k=5, ind_label=None, num_label=5):
+        # model: [regression, LP ...]
+        self.model = model
         # x: np.ndarray((n,d)), domain vectors
         self.x = x
         # y: np.ndarray((n,1)), labels
         self.y = y
+        self.best_ind = np.argmax(self.y)
+        if (model == "LP") or self.ind_label is None:
+            self._labeled_points()
         # distance: [euclidean, dotproduct, cosinesim, constant, heuristic]
         # metric for computing weights on the edges
         self.distance = distance
@@ -31,6 +36,9 @@ class Graph():
         self.ind_label = ind_label
         # num_label: int, number of labeled points
         self.num_label = num_label
+
+        # domain_name_lst: the name of each domain for a domain vector
+        self.domain_name_lst = domain_name_lst
 
         # n: number of examples
         self.n = self.x.shape[0]
@@ -51,12 +59,8 @@ class Graph():
         if self.sparsity == "knn":
             self._knn()
 
-        if self.ind_label is None:
-            self._labeled_points()
-            # ind_unlabeled: np.ndarray((u,1)), the indices of unlabeled data points
-            self.ind_unlabel = np.setdiff1d(np.arange(self.n), self._labeled_points())
-        else:
-            self.ind_unlabel = np.setdiff1d(np.arange(self.n), self.ind_label)
+        # ind_unlabeled: np.ndarray((u,1)), the indices of unlabeled data points
+        self.ind_unlabel = np.setdiff1d(np.arange(self.n), self.ind_label)
         # x_label: np.ndarray((l,d)), labeled domain vectors
         self.x_label = self.x[self.ind_label]
         # y_label: np.ndarray((l,1))
@@ -65,9 +69,15 @@ class Graph():
         self.x_unlabel  = self.x[self.ind_unlabel]
         self.num_label = self.x_label.shape[0]
 
-        self.domain_name_lst = domain_name_lst
-
         self.logger = logger
+
+    # def _label2class(self):
+    #     '''
+    #     Change regression label to class label.
+    #     '''
+    #     ind_sorted = sorted(range(self.n), key=lambda k: self.y[k],reverse=True)
+    #     self.y[ind_sorted[:int(self.n/3)]] = 1
+    #     self.y[ind_sorted[int(self.n/3)+1:]] = 0
 
     def _euclidean(self):
         '''
@@ -143,19 +153,29 @@ class Graph():
         Uniformly sample labeled points from all the data.
         '''
         self.ind_label = np.random.choice(self.n, self.num_label)
+        if model == "LP":
+            ind_label_sorted = sorted(self.ind_label, key=lambda k: self.y[k], reverse=True)
+            self.y[ind_label_sorted[:int(self.num_label/3)]] = 1
+            self.y[ind_label_sorted[int(self.num_label)/3:]] = 0
 
     def update(self):
         self.logger.info("Labeled points ({0}): ".format(self.num_label))
         self.logger.info(self.x_label)
         self.logger.info(self.y_label)
 
-        # 1. train the model
-        self.logger.info("Start training ... ")
-        reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label, self.logger)
-        reg.train()
+        if self.model == "regression":
+            # 1. train the model
+            self.logger.info("Start training ... ")
+            reg = regression.Regression(self.x, self.weight, self.ind_label, self.y_label, self.logger)
+            reg.train()
 
-        # 2. log info
-        best_new_ind = reg.log(self.x, self.y, self.num_label, self.ind_label)
+            # 2. log info
+            best_new_ind = reg.log(self.x, self.y, self.num_label, self.ind_label)
+        elif self.model == "LP":
+            lp = classification.LP(self.weight, self.ind_label, self.ind_unlabel, self.y_label, self.logger)
+            hu = lp.propagate()
+            best_new_ind = self.ind_unlabel[np.argmax(hu)]
+            lp.log(hu, best_new_ind, self.x, self.y, self.best_ind)
 
         # 3. update the graph
         self.ind_label = np.append(self.ind_label, best_new_ind)

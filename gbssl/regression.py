@@ -101,7 +101,7 @@ class Regression():
             new_theta = self.theta - self.alpha * self._gradient()
 
             # stopping condition
-            if np.sum(abs(new_theta - self.theta)) < self.tolerance:
+            if (np.sum(abs(new_theta - self.theta)) < self.tolerance) or (iterations >= 500):
                 self.logger.info("Converged.")
                 break
 

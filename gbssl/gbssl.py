@@ -27,6 +27,7 @@ def get_args():
                         help='How should we get the best evaluation result in the pool? By min or max?')
 
     # Graph arguments
+    parser.add_argument('--model', required=True, choices=['regression', 'LP'])
     parser.add_argument('--distance', required=True,
                         choices=['euclidean', 'dotproduct', 'cosinesim', 'constant', 'heuristic'],
                         help='The metric for computing weights on the edges.')
@@ -118,7 +119,7 @@ def main():
 
         # 3. Find the best label
         logger.info("Building the graph ...")
-        graph_obj = graph.Graph(X, Y, args.distance, args.sparsity, logger, domain_name_lst,
+        graph_obj = graph.Graph(X, Y, args.model, args.distance, args.sparsity, logger, domain_name_lst,
                             args.distance_param, args.k, ind_label, num_label)
         num_update = 1
         while True:
