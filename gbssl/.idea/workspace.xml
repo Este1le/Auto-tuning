@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65960eae-22f7-4c4a-8f70-33b3f06620c8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gbssl.config" beforeDir="false" afterPath="$PROJECT_DIR$/gbssl.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gbssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/gbssl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/regression.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,15 +61,15 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="config" value="262" />
-          <entry key="py" value="1456" />
+          <entry key="config" value="273" />
+          <entry key="py" value="2370" />
           <entry key="sh" value="106" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="368" />
-          <entry key="Python" value="1456" />
+          <entry key="PLAIN_TEXT" value="379" />
+          <entry key="Python" value="2370" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -88,14 +89,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/graph.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="126" column="38" lean-forward="true" selection-start-line="126" selection-start-column="38" selection-end-line="126" selection-end-column="38" />
+            <state relative-caret-position="2240">
+              <caret line="130" column="19" lean-forward="true" selection-start-line="130" selection-start-column="19" selection-end-line="130" selection-end-column="19" />
               <folding>
                 <element signature="e#132#150#0" expanded="true" />
-                <marker date="1562788951911" expanded="true" signature="199:204" ph="..." />
-                <marker date="1562788951911" expanded="true" signature="312:313" ph="..." />
-                <marker date="1562788951911" expanded="true" signature="312:321" ph="..." />
-                <marker date="1562788951911" expanded="true" signature="3789:4008" ph="..." />
+                <marker date="1562897825973" expanded="true" signature="199:204" ph="..." />
+                <marker date="1562897825973" expanded="true" signature="346:347" ph="..." />
+                <marker date="1562897825973" expanded="true" signature="346:355" ph="..." />
+                <marker date="1562897825973" expanded="true" signature="3960:4890" ph="..." />
+                <marker date="1562897825973" expanded="true" signature="4200:4890" ph="..." />
               </folding>
             </state>
           </provider>
@@ -104,22 +106,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/regression.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="858">
-              <caret line="128" column="29" selection-start-line="128" selection-start-column="29" selection-end-line="128" selection-end-column="29" />
+            <state relative-caret-position="454">
+              <caret line="122" column="39" selection-start-line="122" selection-start-column="39" selection-end-line="122" selection-end-column="39" />
               <folding>
                 <element signature="e#106#124#0" expanded="true" />
-                <marker date="1562786331898" expanded="true" signature="160:165" ph="..." />
-                <marker date="1562786331898" expanded="true" signature="1308:1314" ph="..." />
+                <marker date="1562796931771" expanded="true" signature="160:165" ph="..." />
+                <marker date="1562796931771" expanded="true" signature="1305:1311" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gbssl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-543">
-              <caret line="74" column="30" lean-forward="true" selection-start-line="74" selection-start-column="30" selection-end-line="74" selection-end-column="30" />
+            <state relative-caret-position="456">
+              <caret line="24" column="42" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -127,11 +129,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gbssl.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+            <state relative-caret-position="342">
+              <caret line="18" column="74" selection-start-line="18" selection-start-column="74" selection-end-line="18" selection-end-column="74" />
             </state>
           </provider>
         </entry>
@@ -186,6 +188,7 @@
       <find>loss</find>
       <find>axis</find>
       <find>logging</find>
+      <find>format</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -199,22 +202,22 @@
         <option value="$PROJECT_DIR$/preprocess.py" />
         <option value="$PROJECT_DIR$/run_gbssl.sh" />
         <option value="$PROJECT_DIR$/run_gbssl.sh" />
-        <option value="$PROJECT_DIR$/gbssl.config" />
-        <option value="$PROJECT_DIR$/gbssl.config" />
         <option value="$PROJECT_DIR$/regression.py" />
         <option value="$PROJECT_DIR$/regression.py" />
-        <option value="$PROJECT_DIR$/gbssl.py" />
-        <option value="$PROJECT_DIR$/gbssl.py" />
         <option value="$PROJECT_DIR$/graph.py" />
         <option value="$PROJECT_DIR$/graph.py" />
+        <option value="$PROJECT_DIR$/gbssl.py" />
+        <option value="$PROJECT_DIR$/gbssl.py" />
+        <option value="$PROJECT_DIR$/gbssl.config" />
+        <option value="$PROJECT_DIR$/gbssl.config" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1384" />
-    <option name="y" value="135" />
-    <option name="width" value="1281" />
-    <option name="height" value="706" />
+    <option name="x" value="1280" />
+    <option name="y" value="-120" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -237,7 +240,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value=":&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="L&#9;ACTION&#9;Educational.WatchTutorial&#10;:&#9;null&#9;null" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
   </component>
   <component name="RunDashboard">
@@ -256,10 +259,10 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="23" width="1920" height="1057" extended-state="6" />
+    <frame x="1280" y="-120" width="1920" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16535018" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.056872036" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -323,46 +326,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gbssl.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/graph.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="126" column="38" lean-forward="true" selection-start-line="126" selection-start-column="38" selection-end-line="126" selection-end-column="38" />
+        <state relative-caret-position="2240">
+          <caret line="130" column="19" lean-forward="true" selection-start-line="130" selection-start-column="19" selection-end-line="130" selection-end-column="19" />
           <folding>
             <element signature="e#132#150#0" expanded="true" />
-            <marker date="1562788951911" expanded="true" signature="199:204" ph="..." />
-            <marker date="1562788951911" expanded="true" signature="312:313" ph="..." />
-            <marker date="1562788951911" expanded="true" signature="312:321" ph="..." />
-            <marker date="1562788951911" expanded="true" signature="3789:4008" ph="..." />
+            <marker date="1562897825973" expanded="true" signature="199:204" ph="..." />
+            <marker date="1562897825973" expanded="true" signature="346:347" ph="..." />
+            <marker date="1562897825973" expanded="true" signature="346:355" ph="..." />
+            <marker date="1562897825973" expanded="true" signature="3960:4890" ph="..." />
+            <marker date="1562897825973" expanded="true" signature="4200:4890" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/regression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="128" column="29" selection-start-line="128" selection-start-column="29" selection-end-line="128" selection-end-column="29" />
+        <state relative-caret-position="454">
+          <caret line="122" column="39" selection-start-line="122" selection-start-column="39" selection-end-line="122" selection-end-column="39" />
           <folding>
             <element signature="e#106#124#0" expanded="true" />
-            <marker date="1562786331898" expanded="true" signature="160:165" ph="..." />
-            <marker date="1562786331898" expanded="true" signature="1308:1314" ph="..." />
+            <marker date="1562796931771" expanded="true" signature="160:165" ph="..." />
+            <marker date="1562796931771" expanded="true" signature="1305:1311" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gbssl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-543">
-          <caret line="74" column="30" lean-forward="true" selection-start-line="74" selection-start-column="30" selection-end-line="74" selection-end-column="30" />
+        <state relative-caret-position="456">
+          <caret line="24" column="42" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gbssl.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="18" column="74" selection-start-line="18" selection-start-column="74" selection-end-line="18" selection-end-column="74" />
         </state>
       </provider>
     </entry>

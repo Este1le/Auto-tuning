@@ -27,14 +27,15 @@ def get_args():
                         help='How should we get the best evaluation result in the pool? By min or max?')
 
     # Graph arguments
-    parser.add_argument('--distance', required=True, choices=['euclidean', 'dotproduct', 'cosinesim', 'constant'],
+    parser.add_argument('--distance', required=True,
+                        choices=['euclidean', 'dotproduct', 'cosinesim', 'constant', 'heuristic'],
                         help='The metric for computing weights on the edges.')
     parser.add_argument('--sparsity', required=True, choices=['full', 'knn'],
                         help="full: create a fully connected graph; "
                              "knn: Nodes i, j are connected by an edge if i is in j's k-nearest-neighbourhood.")
     parser.add_argument('--distance-param', required=False, default=None,
                         help='The parameter for calculating the distance.')
-    parser.add_argument('--k', required=False, default=5,
+    parser.add_argument('--k', required=False, type=int, default=5,
                         help='The parameter for k-nearest-neighbourhood.')
 
     # Evaluation arguments
@@ -117,7 +118,7 @@ def main():
 
         # 3. Find the best label
         logger.info("Building the graph ...")
-        graph_obj = graph.Graph(X, Y, args.distance, args.sparsity, logger,
+        graph_obj = graph.Graph(X, Y, args.distance, args.sparsity, logger, domain_name_lst,
                             args.distance_param, args.k, ind_label, num_label)
         num_update = 1
         while True:

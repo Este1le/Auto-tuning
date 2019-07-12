@@ -10,12 +10,13 @@ import regression
 import logging
 
 class Graph():
-    def __init__(self, x, y, distance, sparsity, logger, distance_param=None, k=5, ind_label=None, num_label=5):
+    def __init__(self, x, y, distance, sparsity, logger, domain_name_lst,
+                 distance_param=None, k=5, ind_label=None, num_label=5):
         # x: np.ndarray((n,d)), domain vectors
         self.x = x
         # y: np.ndarray((n,1)), labels
         self.y = y
-        # distance: [euclidean, dotproduct, cosinesim, constant]
+        # distance: [euclidean, dotproduct, cosinesim, constant, heuristic]
         # metric for computing weights on the edges
         self.distance = distance
         # distance_param: the parameter for calculating the distance
@@ -34,7 +35,7 @@ class Graph():
         # n: number of examples
         self.n = self.x.shape[0]
         # weight: the weight matrix
-        self.weight = np.ndarray((self.n,self.n))
+        self.weight = np.zeros((self.n,self.n))
 
         if self.distance == "euclidean":
             self._euclidean()
@@ -44,6 +45,8 @@ class Graph():
             self._cosinesim()
         elif self.distance == "constant":
             self._constant()
+        elif self.distance == "heuristic":
+            self._heuristic()
 
         if self.sparsity == "knn":
             self._knn()
@@ -61,6 +64,8 @@ class Graph():
         # x_unlabel: np.ndarray((u,d)), unlabeled domain vectors
         self.x_unlabel  = self.x[self.ind_unlabel]
         self.num_label = self.x_label.shape[0]
+
+        self.domain_name_lst = domain_name_lst
 
         self.logger = logger
 
@@ -96,7 +101,7 @@ class Graph():
             for j in range(self.n):
                 self.weight[i][j] = np.exp(-1./self.distance_param
                                            * ((1-self.x[i].dot(self.x[j]))
-                                              / (np.linalg.norm(self.x[i])*np.linalg.norm(self.x[j]))))
+                                              / (np.linalg.norm(self.x[i])*np.linalg.norm(self.x[j]) + 1e-8)))
 
     def _constant(self):
         '''
@@ -106,13 +111,30 @@ class Graph():
             self.distance_param = 1
         self.weight = np.ones((self.n, self.n)) * self.distance_param
 
+    def _heuristic(self):
+        '''
+        Heuristic weight matrix.
+        '''
+        sim_dict = {'initial_learning_rate':0.1, 'transformer_attention_heads':0.88,
+                    'num_layers':0.78, 'transformer_feed_forward_num_hidden':0.9,
+                    'num_embed':0.4, 'bpe_symbols':0.55, 'transformer_model_size':0.4 }
+        d = self.x.shape[1]
+        for i in range(self.n):
+            for j in range(self.n):
+                for d in range(d):
+                    domain = self.domain_name_lst[d]
+                    if self.x[i][d] != self.x[j][d]:
+                        self.weight[i][j] += sim_dict[domain]
+                    else:
+                        self.weight[i][j] += 1
+
     def _knn(self):
         '''
         Get a sparse weight matrix where wi,j=0, if xi is not in xj's k-nearest-neighbourhood.
         '''
         for i in range(self.n):
             # get the indices of k nearest neighbours of xi
-            k_ind = np.argsort(self.weight[i])[-k:]
+            k_ind = np.argsort(self.weight[i])[-self.k:]
             # set elements with indices not in k_ind to 0
             np.put(self.weight[i], np.setdiff1d(np.arange(self.n), k_ind), 0)
 

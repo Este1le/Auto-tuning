@@ -19,7 +19,7 @@ class Regression():
         self.x_label = self.x[self.ind_label]
         # y_label: np.ndarray((l,1)), known labels
         self.y_label = y_label
-        self.l = self.y_label.shape[0   ]
+        self.l = self.y_label.shape[0]
 
         # alpha: learning rate
         self.alpha = alpha
@@ -76,6 +76,7 @@ class Regression():
         for i in range(self.l):
             first += (y_[i] - y_label[i])*(y_[i] - y_label[i])
         first *= 1./self.l
+        self.logger.info("First loss: {0}".format(first))
 
         second = 0
         y_ = self.predict(self.x).tolist()
@@ -84,6 +85,7 @@ class Regression():
             for b in range(self.n):
                 second += (y_[a] - y_[b]) * (y_[a] - y_[b]) * weight[a][b]
         second *= self.r
+        self.logger.info("Second loss: {0}".format(second))
 
         loss = first + second
 
@@ -105,10 +107,12 @@ class Regression():
 
             if iterations % 10 == 0:
                 new_loss = self.loss()
+                if new_loss > 1000:
+                    self.alpha /= 10
                 self.logger.info("Iteration: {0} - Loss: {1:.4f}".format(iterations, new_loss))
 
-                if np.abs(old_loss - new_loss) < self.r/10:
-                    self.r /= 10
+                if np.abs(old_loss - new_loss) < self.alpha/10:
+                    self.alpha /= 10
 
             iterations += 1
             self.theta = new_theta
