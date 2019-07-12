@@ -119,7 +119,7 @@ def main():
 
         # 3. Find the best label
         logger.info("Building the graph ...")
-        graph_obj = graph.Graph(X, Y, args.model, args.distance, args.sparsity, logger, domain_name_lst,
+        graph_obj = graph.Graph(args.model, X, Y,  args.distance, args.sparsity, logger, domain_name_lst,
                             args.distance_param, args.k, ind_label, num_label)
         num_update = 1
         while True:

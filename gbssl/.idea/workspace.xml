@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65960eae-22f7-4c4a-8f70-33b3f06620c8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/classification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gbssl.config" beforeDir="false" afterPath="$PROJECT_DIR$/gbssl.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/classification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gbssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/gbssl.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/regression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_gbssl.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_gbssl.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,14 +61,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="config" value="327" />
-          <entry key="py" value="4990" />
+          <entry key="py" value="5143" />
           <entry key="sh" value="125" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="452" />
-          <entry key="Python" value="4990" />
+          <entry key="Python" value="5143" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -88,22 +84,22 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.51870465">
+    <splitter split-orientation="horizontal" split-proportion="0.55053043">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/graph.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="331">
-                  <caret line="169" column="23" lean-forward="true" selection-start-line="169" selection-start-column="23" selection-end-line="169" selection-end-column="23" />
+                <state relative-caret-position="950">
+                  <caret line="50" column="32" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
                   <folding>
                     <element signature="e#132#150#0" expanded="true" />
-                    <marker date="1562946442690" expanded="true" signature="199:204" ph="..." />
-                    <marker date="1562946442690" expanded="true" signature="418:419" ph="..." />
-                    <marker date="1562946442690" expanded="true" signature="418:427" ph="..." />
-                    <marker date="1562946442690" expanded="true" signature="2679:2946" ph="..." />
-                    <marker date="1562946442690" expanded="true" signature="4347:5277" ph="..." />
-                    <marker date="1562946442690" expanded="true" signature="4587:5277" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="221:226" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="440:441" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="440:449" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="2937:3204" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="4605:5535" ph="..." />
+                    <marker date="1562948491117" expanded="true" signature="4845:5535" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -112,7 +108,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/regression.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="729">
+                <state relative-caret-position="2546">
                   <caret line="134" column="42" selection-start-line="134" selection-start-column="42" selection-end-line="134" selection-end-column="42" />
                   <folding>
                     <element signature="e#106#124#0" expanded="true" />
@@ -126,8 +122,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/gbssl.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="385">
-                  <caret line="121" column="50" selection-start-line="121" selection-start-column="50" selection-end-line="121" selection-end-column="50" />
+                <state relative-caret-position="1986">
+                  <caret line="121" column="44" selection-start-line="121" selection-start-column="44" selection-end-line="121" selection-end-column="44" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -162,7 +158,7 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/run_gbssl.sh">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="133">
@@ -187,12 +183,12 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/classification.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="570">
-                  <caret line="30" column="51" selection-start-line="30" selection-start-column="51" selection-end-line="30" selection-end-column="51" />
+                <state relative-caret-position="456">
+                  <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
                   <folding>
                     <element signature="e#110#128#0" expanded="true" />
-                    <marker date="1562946469681" expanded="true" signature="156:161" ph="..." />
-                    <marker date="1562946469681" expanded="true" signature="916:921" ph="..." />
+                    <marker date="1562948362079" expanded="true" signature="156:161" ph="..." />
+                    <marker date="1562948362079" expanded="true" signature="925:930" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -214,8 +210,8 @@
       <find>loss</find>
       <find>axis</find>
       <find>logging</find>
-      <find>format</find>
       <find>setdiff</find>
+      <find>format</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -229,15 +225,15 @@
         <option value="$PROJECT_DIR$/preprocess.py" />
         <option value="$PROJECT_DIR$/regression.py" />
         <option value="$PROJECT_DIR$/regression.py" />
-        <option value="$PROJECT_DIR$/graph.py" />
-        <option value="$PROJECT_DIR$/graph.py" />
+        <option value="$PROJECT_DIR$/gbssl.config" />
+        <option value="$PROJECT_DIR$/gbssl.config" />
+        <option value="$PROJECT_DIR$/run_gbssl.sh" />
+        <option value="$PROJECT_DIR$/run_gbssl.sh" />
+        <option value="$PROJECT_DIR$/gbssl.py" />
+        <option value="$PROJECT_DIR$/gbssl.py" />
         <option value="$PROJECT_DIR$/classification.py" />
-        <option value="$PROJECT_DIR$/gbssl.py" />
-        <option value="$PROJECT_DIR$/gbssl.py" />
-        <option value="$PROJECT_DIR$/gbssl.config" />
-        <option value="$PROJECT_DIR$/gbssl.config" />
-        <option value="$PROJECT_DIR$/run_gbssl.sh" />
-        <option value="$PROJECT_DIR$/run_gbssl.sh" />
+        <option value="$PROJECT_DIR$/graph.py" />
+        <option value="$PROJECT_DIR$/graph.py" />
       </list>
     </option>
   </component>
@@ -347,18 +343,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/classification.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="30" column="51" selection-start-line="30" selection-start-column="51" selection-end-line="30" selection-end-column="51" />
-          <folding>
-            <element signature="e#110#128#0" expanded="true" />
-            <marker date="1562946469681" expanded="true" signature="156:161" ph="..." />
-            <marker date="1562946469681" expanded="true" signature="916:921" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gbssl.config">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
@@ -366,9 +350,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/run_gbssl.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="45" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/regression.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="729">
+        <state relative-caret-position="2546">
           <caret line="134" column="42" selection-start-line="134" selection-start-column="42" selection-end-line="134" selection-end-column="42" />
           <folding>
             <element signature="e#106#124#0" expanded="true" />
@@ -380,34 +371,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gbssl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="121" column="50" selection-start-line="121" selection-start-column="50" selection-end-line="121" selection-end-column="50" />
+        <state relative-caret-position="1986">
+          <caret line="121" column="44" selection-start-line="121" selection-start-column="44" selection-end-line="121" selection-end-column="44" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/graph.py">
+    <entry file="file://$PROJECT_DIR$/classification.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="169" column="23" lean-forward="true" selection-start-line="169" selection-start-column="23" selection-end-line="169" selection-end-column="23" />
+        <state relative-caret-position="456">
+          <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
           <folding>
-            <element signature="e#132#150#0" expanded="true" />
-            <marker date="1562946442690" expanded="true" signature="199:204" ph="..." />
-            <marker date="1562946442690" expanded="true" signature="418:419" ph="..." />
-            <marker date="1562946442690" expanded="true" signature="418:427" ph="..." />
-            <marker date="1562946442690" expanded="true" signature="2679:2946" ph="..." />
-            <marker date="1562946442690" expanded="true" signature="4347:5277" ph="..." />
-            <marker date="1562946442690" expanded="true" signature="4587:5277" ph="..." />
+            <element signature="e#110#128#0" expanded="true" />
+            <marker date="1562948362079" expanded="true" signature="156:161" ph="..." />
+            <marker date="1562948362079" expanded="true" signature="925:930" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run_gbssl.sh">
+    <entry file="file://$PROJECT_DIR$/graph.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="45" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+        <state relative-caret-position="950">
+          <caret line="50" column="32" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+          <folding>
+            <element signature="e#132#150#0" expanded="true" />
+            <marker date="1562948491117" expanded="true" signature="221:226" ph="..." />
+            <marker date="1562948491117" expanded="true" signature="440:441" ph="..." />
+            <marker date="1562948491117" expanded="true" signature="440:449" ph="..." />
+            <marker date="1562948491117" expanded="true" signature="2937:3204" ph="..." />
+            <marker date="1562948491117" expanded="true" signature="4605:5535" ph="..." />
+            <marker date="1562948491117" expanded="true" signature="4845:5535" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

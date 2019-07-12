@@ -7,6 +7,7 @@ Build graph for the use of Graph-based Semi-Supervised Learning.
 
 import numpy as np
 import regression
+import classification
 import logging
 
 class Graph():
@@ -18,9 +19,10 @@ class Graph():
         self.x = x
         # y: np.ndarray((n,1)), labels
         self.y = y
+        # n: number of examples
+        self.n = self.x.shape[0]
         self.best_ind = np.argmax(self.y)
-        if (model == "LP") or self.ind_label is None:
-            self._labeled_points()
+
         # distance: [euclidean, dotproduct, cosinesim, constant, heuristic]
         # metric for computing weights on the edges
         self.distance = distance
@@ -36,12 +38,16 @@ class Graph():
         self.ind_label = ind_label
         # num_label: int, number of labeled points
         self.num_label = num_label
+        if self.ind_label is None:
+            self._labeled_points()
+        if self.model == "LP":
+            ind_label_sorted = sorted(self.ind_label, key=lambda k: self.y[k], reverse=True)
+            self.y[ind_label_sorted[:int(self.num_label/3)]] = 1
+            self.y[ind_label_sorted[int(self.num_label/3):]] = 0
 
         # domain_name_lst: the name of each domain for a domain vector
         self.domain_name_lst = domain_name_lst
 
-        # n: number of examples
-        self.n = self.x.shape[0]
         # weight: the weight matrix
         self.weight = np.zeros((self.n,self.n))
 
@@ -153,10 +159,6 @@ class Graph():
         Uniformly sample labeled points from all the data.
         '''
         self.ind_label = np.random.choice(self.n, self.num_label)
-        if model == "LP":
-            ind_label_sorted = sorted(self.ind_label, key=lambda k: self.y[k], reverse=True)
-            self.y[ind_label_sorted[:int(self.num_label/3)]] = 1
-            self.y[ind_label_sorted[int(self.num_label)/3:]] = 0
 
     def update(self):
         self.logger.info("Labeled points ({0}): ".format(self.num_label))

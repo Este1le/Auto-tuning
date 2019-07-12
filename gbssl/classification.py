@@ -15,15 +15,15 @@ class LP():
         self.y_label = y_label
         self.logger = logger
         self.n = self.weight.shape[0]
-        self.y_new = np.zeros((self.n,1))
+        self.y_new = np.zeros((self.n,))
 
     def propagate(self):
-        Wuu = self.weight[self.ind_unlabel][self.ind_unlabel]
-        Wul = self.weight[self.ind_unlabel][self.ind_label]
+        Wuu = self.weight[np.ix_(self.ind_unlabel,self.ind_unlabel)]
+        Wul = self.weight[np.ix_(self.ind_unlabel, self.ind_label)]
         Duu = np.diag(np.sum(Wuu, axis=1))
         Yl = self.y_label
-        hu = np.linalg.inv(Duu-Wuu).dot(Wul).dot(Yl)
-        self.y_new[self.ind_label] = self.y[self.ind_label]
+        hu = np.linalg.inv(Duu-Wuu+1e-8).dot(Wul).dot(Yl)
+        self.y_new[self.ind_label] = self.y_label
         self.y_new[self.ind_unlabel] = hu
 
         return hu
