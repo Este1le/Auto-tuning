@@ -1,6 +1,6 @@
 source /export/a08/xzhan138/Auto-tuning/bayesian_optimization.config
 
-num_run=10
+num_run=15
 for dataset in 'ted-zh-en' 'ted-ru-en' 'robust19-en-ja' 'robust19-ja-en'
 do 
 	modeldir=/export/a10/kduh/p/mt/gridsearch/${dataset}/models/

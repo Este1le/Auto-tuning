@@ -65,7 +65,8 @@ def write_results(args, best_ind, fix_budget, close_best, graph_obj):
     with open(args.output, "w") as f:
         f.write("Labeled points ({0}): \n".format(graph_obj.num_label))
         f.write(str(graph_obj.x_label) + "\n")
-        f.write(str(graph_obj.y_label) + "\n\n")
+        f.write("labeled_y:\n")
+        f.write(",".join([str(y) for y in graph_obj.y_label]) + "\n\n")
 
         f.write("########################################\n\n")
         f.write("Best ind\n")

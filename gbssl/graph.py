@@ -148,11 +148,15 @@ class Graph():
         '''
         Get a sparse weight matrix where wi,j=0, if xi is not in xj's k-nearest-neighbourhood.
         '''
+        mask = np.full((self.n, self.n), False, bool)
         for i in range(self.n):
             # get the indices of k nearest neighbours of xi
             k_ind = np.argsort(self.weight[i])[-self.k:]
+            mask[i][k_ind] = True
             # set elements with indices not in k_ind to 0
-            np.put(self.weight[i], np.setdiff1d(np.arange(self.n), k_ind), 0)
+            #np.put(self.weight[i], np.setdiff1d(np.arange(self.n), k_ind), 0)
+        mask = np.logical_or(mask.T, mask)
+        self.weight *= mask
 
     def _labeled_points(self):
         '''

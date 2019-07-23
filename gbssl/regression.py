@@ -8,7 +8,7 @@ import numpy as np
 import logging
 
 class Regression():
-    def __init__(self, x, weight, ind_label, y_label, logger, alpha=0.05, tolerance=1e-4, r=0.001):
+    def __init__(self, x, weight, ind_label, y_label, logger, alpha=0.2, tolerance=1e-3, r=0.001):
         # x: np.ndarray((n,d)), domain vectors
         self.x = np.pad(x, ((0,0),(1,0)), 'constant', constant_values=1)
         # weight: np.ndarray((n,n)), the edge weight matrix
